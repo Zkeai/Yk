@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon.usercenter.mapper.ScriptsMapper">
+
+    <resultMap id="BaseResultMap" type="com.lemon.usercenter.model.domain.Scripts">
+            <id property="name" column="scriptName" jdbcType="VARCHAR"/>
+            <result property="group" column="scriptGroup" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="INTEGER"/>
+            <result property="version" column="version" jdbcType="VARCHAR"/>
+            <result property="note" column="note" jdbcType="VARCHAR"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        name,group,type,
+        version,note,createTime,
+        isDelete
+    </sql>
+</mapper>

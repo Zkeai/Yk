@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon.usercenter.mapper.SoftwareMapper">
+
+    <resultMap id="BaseResultMap" type="com.lemon.usercenter.model.domain.Software">
+            <id property="secret" column="secret" jdbcType="VARCHAR"/>
+            <result property="id" column="id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="userid" column="userid" jdbcType="VARCHAR"/>
+            <result property="version" column="version" jdbcType="VARCHAR"/>
+            <result property="machine" column="machine" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="notice" column="notice" jdbcType="VARCHAR"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="updateUrl" column="updateUrl" jdbcType="VARCHAR"/>
+            <result property="isDelete" column="isDelete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        secret,id,name,
+        userid,version,machine,
+        status,notice,createTime,
+        updateTime,updateUrl,isDelete
+    </sql>
+</mapper>

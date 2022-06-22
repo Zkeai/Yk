@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon.usercenter.mapper.CardMapper">
+
+    <resultMap id="BaseResultMap" type="com.lemon.usercenter.model.domain.Card">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <id property="kami" column="kami" jdbcType="VARCHAR"/>
+            <result property="userid" column="userid" jdbcType="VARCHAR"/>
+            <result property="software" column="software" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="ip" column="ip" jdbcType="VARCHAR"/>
+            <result property="machine" column="machine" jdbcType="VARCHAR"/>
+            <result property="online" column="online" jdbcType="INTEGER"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="validTime" column="validTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,kami,userid,
+        software,type,status,
+        ip,machine,online,
+        createTime,updateTime,validTime,
+        isDelete
+    </sql>
+</mapper>
