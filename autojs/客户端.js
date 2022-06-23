@@ -8,11 +8,11 @@ var 版本 ="V1.0.0611"
 
 var utils =require('utils.js')
 
-var url ="http://121.5.147.22/api/"
-var ws_url ="121.5.147.22:8080"
+// var url ="http://121.5.147.22/api/"
+// var ws_url ="121.5.147.22:8080"
 
-// var url ="http://192.168.10.8:8080/api/"
-// var ws_url ="192.168.10.8:8080"
+var url ="http://192.168.10.8:8080/api/"
+var ws_url ="192.168.10.8:8080"
 
 var notice ="仅用于自动化测试,不得用于其他用途。"
 
@@ -31,9 +31,28 @@ var SB = x+" x "+y
 var SBXT = device.release
 var uuid;
 var remark;
+var secret;
 var Ws;
 
-
+//检测root
+function isSuEnable() {
+    var file = null;
+    var paths = ["/system/bin/", "/system/xbin/", "/system/sbin/", "/sbin/", "/vendor/bin/", "/su/bin/"];
+    try {
+        for (let path in paths) {
+            let file = new java.io.File(paths[path] + "su");
+            if (file.exists() && file.canExecute()) return true;
+        }
+    } catch (x) {
+        toast("错误" + x)
+    }
+    return false;
+}
+if (isSuEnable() != true) {
+    Root = "设备未root"
+} else {
+    Root = "设备已root"
+}
 //构造自己得按钮
 var ColoredButton = (function () {
     //继承ui.Widget
@@ -109,21 +128,34 @@ ui.layout(
                         <View bg="#f44336" h="*" w="10" />
                     </card>
                     {/* 卡片三 */}
-                    <card id="card3" w="*" h="120vh" margin="10 5" cardCornerRadius="2dp"
+                    <card id="card3" w="*" h="200vh" margin="10 5" cardCornerRadius="2dp"
                         cardElevation="1dp" gravity="center_vertical">
-                        <vertical>
-                            <horizontal padding="10 0" h="auto">
-                                <text id="UUID" text="UUID:" textColor="#222222" textSize="12sp" margin="10 0 0 0" />
-                                <input id="input_uuid"  readonly="readonly" hint="请输入UUID(后台获取)" width="280sp"  textSizeHint="10sp" textSize="11sp" />
-                            </horizontal>
+                                    <vertical>
+                                        <horizontal padding="10 0" h="auto">
+                                            <text id="UUID" text="UUID:" textColor="#222222" textSize="12sp" margin="10 0 0 0" />
+                                            <input id="input_uuid"  readonly="readonly" hint="请输入UUID(后台获取)" width="280sp"  textSizeHint="10sp" textSize="11sp" />
+                                        </horizontal>
 
-                            <horizontal padding="10 0" h="auto">
+                                        <horizontal padding="10 0" h="auto">
 
-                            <text id="remark" text="编号:" textColor="#222222" textSize="12sp" margin="10 0 0 0" />
-                            <input id="input_remark"  readonly="readonly" hint="请输入设备编号" width="280sp"  textSizeHint="10sp" textSize="11sp" />
-                            </horizontal>
-                            <colored-button   id="保存" text="保存" color="#1BD0D0" margin="10 5 0 0" w="320sp" />
-                        </vertical>
+                                        <text id="remark" text="编号:" textColor="#222222" textSize="12sp" margin="10 0 0 0" />
+                                        <input id="input_remark"  readonly="readonly" hint="请输入设备编号" width="280sp"  textSizeHint="10sp" textSize="11sp" />
+                                        </horizontal>
+
+                                        <horizontal padding="10 0" h="auto">
+                                        <text id="software" text="密钥:" textColor="#222222" textSize="12sp" margin="10 0 0 0" />
+                                        <input id="input_software"  readonly="readonly" hint="仅卡密用户需要,联系上级获取" width="280sp"  textSizeHint="10sp" textSize="11sp" />
+                                        </horizontal>
+                                        
+                                        <horizontal padding="10 0" h="auto">
+                                        <text id="secret" text="卡密:" textColor="#222222" textSize="12sp" margin="10 0 0 0" />
+                                        <input id="input_secret"  readonly="readonly" hint="仅卡密用户需要" width="280sp"  textSizeHint="10sp" textSize="11sp" />
+                                        </horizontal>
+
+
+                                        <colored-button   id="保存" text="保存" color="#1BD0D0" margin="10 5 0 0" w="320sp" />
+                                    </vertical>
+
                         <View bg="#0b84f4" h="*" w="10" />
                     </card>
 
@@ -131,12 +163,7 @@ ui.layout(
 
 
                 </vertical>
-
-
-
-
             </frame>
-
 
             <frame>
             <card w="*" h="300" margin="10 20" cardCornerRadius="2dp"
@@ -196,7 +223,6 @@ ui.layout(
                 <View bg="#afafaf" h="*" w="10" />
             </card>
             </frame>
-
         </viewpager>
     </vertical>
     <vertical layout_gravity="left" bg="#ffffff" w="280">
@@ -213,25 +239,7 @@ ui.layout(
 
 
 
-//检测root
-function isSuEnable() {
-    var file = null;
-    var paths = ["/system/bin/", "/system/xbin/", "/system/sbin/", "/sbin/", "/vendor/bin/", "/su/bin/"];
-    try {
-        for (let path in paths) {
-            let file = new java.io.File(paths[path] + "su");
-            if (file.exists() && file.canExecute()) return true;
-        }
-    } catch (x) {
-        toast("错误" + x)
-    }
-    return false;
-}
-if (isSuEnable() != true) {
-    Root = "设备未root"
-} else {
-    Root = "设备已root"
-}
+
 
 
 
@@ -246,7 +254,7 @@ ui.emitter.on("create_options_menu", menu => {
 ui.emitter.on("options_item_selected", (e, item) => {
     switch (item.getTitle()) {
         case "编辑":
-            ui.card3.attr("h","120vh")
+            ui.card3.attr("h","200vh")
             ui.保存.attr("visibility", "visible");
  
             break;
@@ -267,6 +275,7 @@ activity.setSupportActionBar(ui.toolbar);
 
 //设置滑动页面的标题
 ui.viewpager.setTitles(["应用设置", "设备信息"]);
+
 //让滑动页面和标签栏联动
 ui.tabs.setupWithViewPager(ui.viewpager);
 //悬浮窗和无障碍权限
@@ -316,6 +325,14 @@ if (auto.service == null) {
             let remark_ = storage.get("remark")
             ui.input_remark.setText(remark_)
         }
+        if (storage.contains("secret") == true) {
+            let secret_ = storage.get("secret")
+            ui.input_secret.setText(secret_)
+        }
+        if (storage.contains("software") == true) {
+            let software_ = storage.get("software")
+            ui.input_software.setText(software_)
+        }
     }
 
 
@@ -326,6 +343,8 @@ if (auto.service == null) {
 ui.保存.on("click",function(){
     uuid =String(ui.input_uuid.getText())
     remark =String(ui.input_remark.getText())
+    secret = String(ui.input_secret.getText())
+    software = String(ui.input_software.getText())
     if( uuid == ""){
         toastLog("请填入UUID")
         return
@@ -335,30 +354,58 @@ ui.保存.on("click",function(){
         return
     }
 
-        主脚本(uuid)
+        主脚本(uuid,secret,software)
 
     
 })
 
 
-//设备上线 开启websocket功能
-function 主脚本(uuid){
 
-/* 检测uuid是否存在 */
+function 主脚本(uuid,secret,software){
+
+/* 会员登录 */
     function hasUUID(uuid){
         try {
             var thread = threads.start(function(){
                 var res = http.postJson(url+"user/searchUUID", {
                     "uuid": uuid,
+                    "remark":remark,
+                    "model":IMEI
                 });
                 var html = res.body.string();
                 var html = JSON.parse(html);
-                code = html.code;
+                data = html.data;
+
             })
             thread.join()
-            switch(code){
-                case 40000:
-                    toastLog(html.description)
+            switch(data){
+                case null:
+                    toastLog("uuid不存在")
+                    break;
+                case 2:
+                    toastLog("编号重复")
+                    break;
+                case 3:
+                    
+                    if(secret !== ''){
+                        var response = usekami(uuid,secret,software)
+                        if(response == true){
+                            Ws = startWs();
+                        }
+                    }else{
+                        toastLog("用户未充值")
+                    }
+                    break;
+                case 4:
+                    if(secret !== ''){
+                        var response = usekami(uuid,secret,software)
+                        if(response == true){
+                            Ws = startWs();
+                        }
+                    }else{
+                        toastLog("用户已过期")
+                    }
+                    
                     break;
                 case 0:
                     storage.put("uuid",uuid)
@@ -367,13 +414,13 @@ function 主脚本(uuid){
         
                     ui.post(() => {
                         ui.保存.attr("visibility", "gone");
-                        ui.card3.attr("h","40vh")
+                        ui.card3.attr("h","80vh")
                     }, 1000);
                     break;
             }
             return Ws
         } catch (error) {
-            toastLog("UUID或编号有误")
+            toastLog("未知错误")
         }
         function startWs(){
             let ws = web.newWebSocket("ws://"+ws_url+"/api/ws/"+IMEI, {
@@ -400,10 +447,87 @@ function 主脚本(uuid){
 
 
     }
-
-
-
     Ws = hasUUID(uuid)
+
+/* 卡密登录 */
+    function usekami(uuid,secret,software){
+        let response =false;
+        try {
+            let thread =threads.start(function(){
+                            //获取uuid
+                            var res = http.postJson(url+"user/getUserid", {
+                                "uuid": uuid,
+                            });
+                            var html = res.body.string();
+                            var html = JSON.parse(html);
+                            var userid = html.data;
+                        //获取机器码
+                        function 设备信息加密(){
+                            var MD5 = require('./md5.js');
+                            return MD5.hex_md5(device.model,device.fingerprint,device.serial,device.getIMEI(),false,true)
+                        }
+                        var machine = 设备信息加密()
+                        //获取ip
+                        var res = http.get("http://ip.json-json.com/");
+                        var ip = res.body.string();
+
+
+                        //use
+                            var res = http.postJson(url+"kami/useKami", {
+                                "userid": userid,
+                                "software": software,
+                                "kami": secret,
+                                "machine": machine,
+                                "ip": ip
+                            });
+                            var html = res.body.string();
+                            var html = JSON.parse(html);
+                            code =html.code
+                            data = html.data;
+                            description=html.description
+                        })
+                        thread.join()
+                            if(code == 40000){
+                                toastLog(description)
+                            }
+                            else if(code == 50000){
+                                toastLog(description)
+                            }
+                            else if(code == 0){
+                                if(compare(data)){
+                                    storage.put("uuid",uuid)
+                                    storage.put("remark",remark)
+                                    storage.put("secret",secret)
+                                    storage.put("software",software)
+                                    ui.post(() => {
+                                        ui.保存.attr("visibility", "gone");
+                                        ui.card3.attr("h","145vh")
+                                    }, 1000);
+                                    response = true
+                                }else{
+                                    toastLog("卡密过期")               
+                                }
+                            }
+
+
+
+
+
+            return response;
+
+        } catch (error) {
+            toastLog(error)
+        }
+
+
+
+
+
+
+    }
+
+
+//设备上线 开启websocket功能
     if(Ws !== undefined){
         Ws.on("text", (text, ws) => {
             console.info("服务端消息: "+ text);
@@ -688,4 +812,15 @@ function MonitoringTask(device,uuid){
        
         return ress;
         
+}
+
+//比较时间
+function compare(date1){
+    let res = false;
+    let oDate1 = new Date(date1.replace(/-/g,"/"));
+    let oDate2 = new Date();
+    if(oDate1.getTime() > oDate2.getTime()){
+        res= true
+    }
+    return res;
 }

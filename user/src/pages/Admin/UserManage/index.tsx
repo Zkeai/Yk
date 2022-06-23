@@ -15,6 +15,7 @@ const columns: ProColumns<API.CurrentUser>[] = [
   },
   {
     title: '用户名',
+    align:"center",
     search:false,
     dataIndex: 'username',
     ellipsis: true,
@@ -23,12 +24,14 @@ const columns: ProColumns<API.CurrentUser>[] = [
   },
   {
     title: '账号',
+    align:"center",
     search:false,
     dataIndex: 'userAccount',
     editable:false,
   },
   {
     title: 'UUID',
+    align:"center",
     search:false,
     dataIndex: 'uuid',
     copyable: true,
@@ -37,6 +40,7 @@ const columns: ProColumns<API.CurrentUser>[] = [
   },
   {
     title: '头像',
+    align:"center",
     editable:false,
     search:false,
     dataIndex: 'avatarUrl',
@@ -47,25 +51,22 @@ const columns: ProColumns<API.CurrentUser>[] = [
       ),
   },
   {
-    title: '性别',
-    search:false,
-    dataIndex: 'gender',
-    editable:false,
-  },
-  {
     title: '电话',
+    align:"center",
     dataIndex: 'phone',
     editable:false,
     search:false,
   },
   {
     title: '邮箱',
+    align:"center",
     dataIndex: 'email',
     editable:false,
     search:false,
   },
   {
     title: '状态',
+    align:"center",
     dataIndex: 'userStatus',
     valueEnum:{
       0:'正常',
@@ -74,6 +75,7 @@ const columns: ProColumns<API.CurrentUser>[] = [
   },
   {
     title: '角色',
+    align:"center",
     dataIndex: 'userRole',
       valueType: 'select',
       valueEnum: {
@@ -88,9 +90,20 @@ const columns: ProColumns<API.CurrentUser>[] = [
         }
       },
   },
-
+  {
+    title: '上级',
+    align:"center",
+    dataIndex: 'superior',
+  },
+  {
+    title: '会员过期时间',
+    align:"center",
+    valueType: 'dateTime',
+    dataIndex: 'validTime',
+  },
   {
     title: '创建时间',
+    align:"center",
     dataIndex: 'createTime',
     valueType: 'dateTime',
     sorter: true,
@@ -99,6 +112,7 @@ const columns: ProColumns<API.CurrentUser>[] = [
   },
   {
     title: '创建时间',
+    align:"center",
     dataIndex: 'created_at',
     valueType: 'dateRange',
     hideInTable: true,
@@ -113,13 +127,13 @@ const columns: ProColumns<API.CurrentUser>[] = [
   },
   {
     title: '操作',
+    align:"center",
     valueType: 'option',
     key: 'option',
     render: (text, record, _, action) => [
       <a
         key="editable"
         onClick={() => {
-          console.log(action)
           action?.startEditable?.(record.id);
         }}
 
@@ -154,7 +168,9 @@ export default () => {
           const userID = data.id;
           const userStatus = data.userStatus;
           const userRole =data.userRole;
-          const res = await edit({userID,userStatus,userRole});
+          const superior =data.superior;
+          const validTime =data.validTime.toString();
+          const res = await edit({userID,userStatus,userRole,superior,validTime});
           if(res.data == 1){
             message.success("修改成功")
             return;
@@ -166,8 +182,11 @@ export default () => {
         onDelete:async (rowKey, data)=>{
           const userID =data.id;
           const res = await deleteUser({userID})
-          console.log(res)
-
+          if(res.code === 0 && res.data ===true){
+            message.success('删除成功',1)
+          }else{
+            message.error(res.description,1)
+          }
         }
       }}
       columnsState={{

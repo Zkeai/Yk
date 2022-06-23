@@ -1,19 +1,25 @@
 import {useEffect, useRef, useState} from 'react';
-import {Table, Input, Button, Space, Form, message, Tag} from 'antd';
+import {Table, Input, Button, Space, Form, message, Tag, Select} from 'antd';
 // @ts-ignore
 import Highlighter from 'react-highlight-words';
-import {DeleteOutlined, PlusCircleOutlined,SearchOutlined} from '@ant-design/icons';
+import {DeleteOutlined, PlusCircleOutlined, SearchOutlined, SlackOutlined} from '@ant-design/icons';
 import moment from 'moment';
-import {deleteDevice, deviceAdd, searchDevicesList} from "@/services/ant-design-pro/api";
+import {
+  deleteDevice,
+  deviceAdd,
+  editDevice,
+  searchDeviceGroupList,
+  searchDevicesList
+} from "@/services/ant-design-pro/api";
 
 import {ws} from '@/utils/WebSocket'
 import {decrypt} from "@/utils/aes";
 
+const { Option } = Select;
 
 
 
 const Phone = () => {
-
   const [deviceListData,setDeviceListDate]=useState()
   const [refreshKey, setRefreshKey] = useState(100);
   const [hasLoading,setLoading] =useState(true)
@@ -31,9 +37,11 @@ const Phone = () => {
 
   }
   const action: any = []
+  const group: any=[]
+  const selectedArray: any =[]
+  const [groupList,setGroupList]=useState([])
 
-
-
+let groupValue ="";
 
 
 
@@ -46,7 +54,6 @@ useEffect(()=>{
         setRefreshKey(a)
 
 
-
     }
     if(e.data === "设备下线"){
       const a =refreshKey-1
@@ -57,6 +64,22 @@ useEffect(()=>{
 },[])
 
   useEffect( () => {
+
+    const getGroupList =async ()=>{
+
+      const {data} = await searchDeviceGroupList();
+      const res =decrypt(data).split(";")
+      if(res[0] !== ""){
+        for(let i = 0 ;i < res.length;i++){
+          const m = JSON.parse(res[i])
+          group.push(m.name)
+        }
+
+        setGroupList(group)
+      }
+    }
+    getGroupList().then()
+
     const getDevicesList = async () => {
       const {data} = await searchDevicesList();
       const res =decrypt(data).split(";")
@@ -77,15 +100,11 @@ useEffect(()=>{
 
         }
 
-
-
-
-
-
       setLoading(false)
       setDeviceListDate(action)
     }
     getDevicesList().then()
+
 
   }, [refreshKey])
   const [searchText, setSearchText] = useState('');
@@ -94,9 +113,15 @@ useEffect(()=>{
 
 
 
+  const handleValue =async (newValue: any) => {
 
-  // @ts-ignore
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    groupValue = newValue
+
+  };
+
+
+
+  const handleSearch = (selectedKeys: any, confirm: any, dataIndex: any) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -176,8 +201,6 @@ useEffect(()=>{
   });
 
 
-
-
   const columns: any= [
     {
       title: 'ID',
@@ -192,7 +215,6 @@ useEffect(()=>{
       key: 'remark',
       align:'center',
       width: '15%',
-      ...getColumnSearchProps('remark'),
     },
     {
       title: '设备名',
@@ -200,7 +222,6 @@ useEffect(()=>{
       key: 'deviceName',
       align:'center',
       width: '15%',
-      ...getColumnSearchProps('deviceName'),
     },
     {
       title: '设备识别码',
@@ -208,7 +229,6 @@ useEffect(()=>{
       key: 'deviceModel',
       align:'center',
       width: '15%',
-      ...getColumnSearchProps('deviceModel'),
     },
     {
       title: '设备分组',
@@ -252,9 +272,6 @@ useEffect(()=>{
       ))
     },
   ];
-
-
-
   const onFinish =async (values: any) => {
     const res = await deviceAdd({...values})
     if(res.code === 0){
@@ -269,9 +286,54 @@ useEffect(()=>{
 
 
   };
+  const allotOnClick =async()=>{
+    let a= 0;
+    for(let i = 0;i<selectedArray.length;i++){
+      const id = selectedArray[i];
+
+      const groupName = groupValue;
+      const res = await editDevice({id,groupName})
+
+      if(res.code === 0){
+        a = a+1
+      }
+
+    }
+    if(a ===selectedArray.length){
+      message.success('设备分组修改成功',1)
+      const m =refreshKey +1
+      setRefreshKey(m)
+    }else{
+      message.error('部分设备分组修改失败',1)
+    }
 
 
-  const rowSelection={}
+
+
+  }
+  const rowSelection={
+    onSelect:(record: API.devicesListSearchParams, selected: boolean)=>{
+      if(selected){
+        selectedArray.push(record.id)
+      }else{
+       const position = selectedArray.indexOf(record.id)
+        selectedArray.splice(position,1)
+      }
+
+    },
+    onSelectAll:(selected: boolean, selectedRows: any)=>{
+      if(selected){
+        for(let i =0;i < selectedRows.length;i++){
+          selectedArray.push(selectedRows[i].id)
+        }
+      }else{
+        for(let i =0;i < selectedArray.length+1;i++){
+          selectedArray.splice(0,1)
+        }
+      }
+    }
+
+  }
   return (
     <div style={{margin:'0 auto'}}>
       <Form
@@ -303,15 +365,50 @@ useEffect(()=>{
             </Form.Item>
           </Space>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button icon={<PlusCircleOutlined />} type="primary" htmlType="submit">
+            <Button icon={<PlusCircleOutlined />} type="primary" htmlType="submit" >
               添加
             </Button>
           </Form.Item>
+
+        </div>
+
+      </Form>
+
+
+
+        <div style={{marginTop:"-56px",marginLeft:"750px"}}>
+          <Space>
+            <Select id={"GroupNameSelect"} style={{ width: 120 }} allowClear onChange={handleValue}>
+              {
+                groupList.map((m: string)=>{
+                  return(
+                    <Option key={m} value={m}>{m}</Option>
+                  )
+                })
+              }
+
+            </Select>
+
+            <Button onClick={()=>{allotOnClick()}} icon={<SlackOutlined />} color={"red"}   type="primary" danger>
+              分配
+            </Button>
+          </Space>
+
         </div>
 
 
-      </Form>
-      <Table  rowKey={record => record.id} loading={hasLoading} size={"small"} columns={columns} dataSource={deviceListData} rowSelection={rowSelection} />
+
+      <Table
+        style={{marginTop:"24px"}}
+        rowKey={record => record.id}
+        loading={hasLoading}
+        size={"small"}
+        columns={columns}
+        dataSource={deviceListData}
+        rowSelection={rowSelection}
+
+      />
+
     </div>
 
 

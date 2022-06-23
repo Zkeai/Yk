@@ -15,7 +15,8 @@ public enum ErrorCode {
 
     SYSTEM_ERROR(50000,"系统内部异常",""),
 
-    TASK_ERROR(50001,"已经有执行任务","")
+    TASK_ERROR(50001,"已经有执行任务",""),
+    DEVICE_ERROR(60001,"编号重复","")
     ;
     /**
      * 状态码

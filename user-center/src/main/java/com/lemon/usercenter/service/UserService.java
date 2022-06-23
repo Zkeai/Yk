@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpServer;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
+import java.util.Date;
 
 /**
  * 用户服务
@@ -59,7 +60,7 @@ public interface UserService extends IService<User> {
      * @param request request
      * @return 0、1
      */
-    int userEdit(long userID,int userStatus, int userRole,HttpServletRequest request);
+    int userEdit(long userID, int userStatus, int userRole, String superior, String validTime, HttpServletRequest request);
 
     /**
      * 用户修改信息
@@ -71,5 +72,5 @@ public interface UserService extends IService<User> {
      * @param password password
      * @return 0 1
      */
-    int userInfoEdit(long id,String nickName, String email, String phone, String image,String password);
+    int userInfoEdit(long id,String nickName, String email, String phone, String image,String password,String superior);
 }

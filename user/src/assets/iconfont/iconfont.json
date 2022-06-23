@@ -1,0 +1,58 @@
+{
+  "id": "3461773",
+  "name": "云控",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1503777",
+      "name": "应用",
+      "font_class": "yingyong",
+      "unicode": "e64f",
+      "unicode_decimal": 58959
+    },
+    {
+      "icon_id": "3734453",
+      "name": "多设备",
+      "font_class": "duoshebei",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
+    },
+    {
+      "icon_id": "5644715",
+      "name": "用户管理",
+      "font_class": "yonghuguanli",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "12134661",
+      "name": "任务",
+      "font_class": "ef-renwu-gongju",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "20104544",
+      "name": "总耗时时长",
+      "font_class": "zonghaoshishichang",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "27499578",
+      "name": "卡密分类",
+      "font_class": "kamifenlei",
+      "unicode": "e6a4",
+      "unicode_decimal": 59044
+    },
+    {
+      "icon_id": "3978471",
+      "name": "脚本管理",
+      "font_class": "jiaobenguanli",
+      "unicode": "e698",
+      "unicode_decimal": 59032
+    }
+  ]
+}

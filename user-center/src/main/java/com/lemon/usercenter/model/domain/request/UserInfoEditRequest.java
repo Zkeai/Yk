@@ -14,4 +14,5 @@ public class UserInfoEditRequest implements Serializable{
     private String image;
     private String phone;
     private String password;
+    private String superior;
 }

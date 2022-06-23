@@ -40,15 +40,19 @@ const UserInfo = () => {
         <Tag className="tag-id"  color="#1890ff">
           {"用户ID："+initialState?.currentUser?.id}
         </Tag>
-        <Tag className="tag-uuid"  color="#1890ff">
+        <Tag className="tag-uuid"  color="#f38b00" >
           {"UUID："+initialState?.currentUser?.uuid}
         </Tag>
         <Tag className="tag-role" icon={<UserOutlined />} color="#d94a38">
           {initialState?.currentUser?.userRole === 1 ? '管理员' : '普通用户'}
         </Tag>
-        <Tag className="tag-status" icon={<UserOutlined />} color="#00897b">
-          {initialState?.currentUser?.userStatus === 0 ? '状态正常' : '冻结状态'}
 
+        <Tag className="tag-status" color="#00897b">
+          {initialState?.currentUser?.userStatus === 0 ? '状态正常' : '冻结状态'}
+        </Tag>
+
+        <Tag className="tag-vip"  color="#b76610">
+          {initialState?.currentUser?.validTime === undefined ? '非会员' : '会员用户：'+initialState?.currentUser?.validTime}
         </Tag>
 
       </div>

@@ -261,6 +261,17 @@ export async function deleteDevice(body: API.typeDelete, options?: { [p: number]
     ...(options || {}),
   });
 }
+/** 修改设备分组 POST /api/device/editPhone */
+export async function editDevice(body: API.deviceEditParams, options?: { [p: number]: any }) {
+  return request<API.BaseResponse<number>>('/api/device/editPhone', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 
 /** 查询设备分组列表 GET /api/device/getGroupList */
 export async function searchDeviceGroupList(options?: { [key: string]: any }) {
@@ -364,6 +375,17 @@ export async function addTask(body: API.taskAddParams, options?: { [key: string]
 export async function searchTask(options?: { [key: string]: any }) {
   return request<API.BaseResponse<API.taskListItem[]>>('/api/task/getTask ', {
     method: 'GET',
+    ...(options || {}),
+  });
+}
+/** 删除任务 POST /api/task/delete */
+export async function deleteTask(body: API.typeDelete, options?: { [p: number]: any }) {
+  return request<API.BaseResponse<number>>('/api/task/delete', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
     ...(options || {}),
   });
 }

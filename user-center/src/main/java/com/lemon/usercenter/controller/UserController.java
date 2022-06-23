@@ -7,7 +7,9 @@ import com.lemon.usercenter.common.BaseResponse;
 import com.lemon.usercenter.common.ErrorCode;
 import com.lemon.usercenter.common.ResultUtils;
 import com.lemon.usercenter.exception.BusinessException;
+import com.lemon.usercenter.mapper.DevicesMapper;
 import com.lemon.usercenter.mapper.UserMapper;
+import com.lemon.usercenter.model.domain.Devices;
 import com.lemon.usercenter.model.domain.User;
 import com.lemon.usercenter.model.domain.request.*;
 import com.lemon.usercenter.service.UserService;
@@ -25,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.lemon.usercenter.contant.UserConstant.*;
@@ -43,6 +46,16 @@ public class UserController {
     @Resource
     private UserMapper userMapper;
 
+    @Resource
+    private DevicesMapper devicesMapper;
+
+    /**
+     * 注册
+     * @param userRegisterRequest userRegisterRequest
+     * @param request request
+     * @return id
+     * @throws Exception xception
+     */
     @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest,HttpServletRequest request) throws Exception {
         if(userRegisterRequest == null) {
@@ -62,6 +75,13 @@ public class UserController {
         return ResultUtils.success(result);
     }
 
+    /**
+     * 登录
+     * @param userLoginRequest userLoginRequest
+     * @param request request
+     * @return User
+     * @throws Exception Exception
+     */
     @PostMapping("/login")
     public BaseResponse<User> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) throws Exception {
         if(userLoginRequest == null) {
@@ -76,6 +96,11 @@ public class UserController {
         return ResultUtils.success(user);
     }
 
+    /**
+     * 退出登录
+     * @param request request
+     * @return int
+     */
     @PostMapping("/logout")
     public BaseResponse<Integer> userLogout(HttpServletRequest request)  {
         if(request == null) {
@@ -86,6 +111,12 @@ public class UserController {
         return ResultUtils.success(result);
     }
 
+    /**
+     * 获取单个用户
+     * @param request request
+     * @return User
+     * @throws Exception Exception
+     */
     @GetMapping("/current")
     public BaseResponse<String> getCurrentUser(HttpServletRequest request) throws Exception {
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
@@ -109,12 +140,20 @@ public class UserController {
         SafetyUsers.put("email",safetyUser.getEmail());
         SafetyUsers.put("userStatus",safetyUser.getUserStatus());
         SafetyUsers.put("userRole",safetyUser.getUserRole());
+        SafetyUsers.put("superior",safetyUser.getSuperior());
+        SafetyUsers.put("validTime",safetyUser.getValidTime());
         SafetyUsers.put("createTime",safetyUser.getCreateTime());
         SafetyUsers.put("updateTime",safetyUser.getUpdateTime());
         String res =Encrypt.AESencrypt(SafetyUsers.toString());
         return ResultUtils.success(res);
     }
 
+    /**
+     * 查询用户
+     * @param username username
+     * @param request request
+     * @return User
+     */
     @GetMapping("/search")
     public BaseResponse<List<User>> searchUsers(String username,HttpServletRequest request) {
         if(!isAdmin(request)){
@@ -129,30 +168,44 @@ public class UserController {
         return ResultUtils.success(result);
     }
 
+    /**
+     * 安卓端获取是否会员
+     * @param userSearchUUIDRequest userSearchUUIDRequest
+     * @return  0： ok  1：uuid不存在  2：编号已存在  3：不是会员 4：会员过期
+     */
     @PostMapping("/searchUUID")
     public BaseResponse<Integer> searchUUID(@RequestBody UserSearchUUIDRequest userSearchUUIDRequest){
-        int res = 1;
+        int res = 0;
         Date validTimeStr = null;
 
-        int uuid =userSearchUUIDRequest.getUuid();
+        int uuid = userSearchUUIDRequest.getUuid();
+        String remark = userSearchUUIDRequest.getRemark();
+        String IMEI = userSearchUUIDRequest.getModel();
         //查询用户是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uuid", uuid);
         User user = userMapper.selectOne(queryWrapper);
-
-        if(user != null){
-            validTimeStr = user.getValidTime();
-            res = 0;
+        if(user == null){
+            res = 1;
         }else{
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"UUID不存在");
+            validTimeStr = user.getValidTime();
         }
+
+        //查询编号是否已经存在
+        QueryWrapper<Devices> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("uuid", uuid).eq("remark",remark);
+        Devices device = devicesMapper.selectOne(queryWrapper1);
+        if(device != null && (!Objects.equals(device.getDeviceModel(), IMEI))){
+            res = 2;
+        }
+
 
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         String Time=df.format(new Date());// new Date()为获取当前系统时间
 
         if(validTimeStr == null){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"无效用户");
+            res =3;
         }
 
         Date date = null;
@@ -161,15 +214,39 @@ public class UserController {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        if (date.after(validTimeStr)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"会员已过期");
-        }
 
+        if (date.after(validTimeStr)) {
+            res =4 ;
+        }
 
         return ResultUtils.success(res);
     }
 
+    /**
+     * uuid获取userid
+     * @param userSearchUseridRequest uuid
+     * @return userid
+     */
+    @PostMapping("/getUserid")
+    public BaseResponse<String> getUserid(@RequestBody UserSearchUseridRequest userSearchUseridRequest){
 
+        int uuid = userSearchUseridRequest.getUuid();
+
+        //查询用户是否存在
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("uuid", uuid);
+        User user = userMapper.selectOne(queryWrapper);
+        String userid = user.getUserAccount();
+
+        return ResultUtils.success(userid);
+    }
+
+    /**
+     * 删除用户
+     * @param userDeleteRequest userDeleteRequest
+     * @param request request
+     * @return boolean
+     */
     @PostMapping("/delete")
     public BaseResponse<Boolean> deleteUsers(@RequestBody UserDeleteRequest userDeleteRequest, HttpServletRequest request) {
 
@@ -199,11 +276,13 @@ public class UserController {
         }
         long userID= UserEditRequest.getUserID();
         int userStatus = UserEditRequest.getUserStatus();
-        int userRole= UserEditRequest.getUserRole();
+        int userRole = UserEditRequest.getUserRole();
+        String superior = UserEditRequest.getSuperior();
+        String validTime =UserEditRequest.getValidTime();
         if(userRole < 0 || userStatus < 0 ){
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        int result =userService.userEdit(userID,userStatus,userRole,request);
+        int result =userService.userEdit(userID,userStatus,userRole,superior,validTime,request);
 
         return ResultUtils.success(result);
     }
@@ -225,8 +304,8 @@ public class UserController {
         String phone = UserInfoEditRequest.getPhone();
         String password =UserInfoEditRequest.getPassword();
         String image =UserInfoEditRequest.getImage();
-
-        int result =userService.userInfoEdit(id,nickName,email,phone,image,password);
+        String superior =UserInfoEditRequest.getSuperior();
+        int result =userService.userInfoEdit(id,nickName,email,phone,image,password,superior);
 
         return ResultUtils.success(result);
     }

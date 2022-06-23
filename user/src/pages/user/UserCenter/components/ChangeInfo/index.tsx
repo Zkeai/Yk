@@ -97,10 +97,16 @@ const handleSubmit = async(values: API.userinfoEditParams)=>{
 
 const App = () => {
 
+
+
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const { initialState } = useModel('@@initialState');
   const [imageUrl, setImageUrl] = useState<any>(initialState?.currentUser?.avatarUrl);
+  console.log(initialState?.currentUser?.superior)
+  const a ={
+    disabled:initialState?.currentUser?.superior !== '' && initialState?.currentUser?.superior !== undefined
+  }
 
   const onFinish =async (values: any) => {
 
@@ -174,6 +180,7 @@ const App = () => {
       </Upload>
 
         <Form
+
           {...formItemLayout}
           form={form}
           name="register"
@@ -184,6 +191,8 @@ const App = () => {
             nickName:initialState?.currentUser?.username,
             email:initialState?.currentUser?.email,
             phone:initialState?.currentUser?.phone,
+            superior:initialState?.currentUser?.superior,
+            validTime:initialState?.currentUser?.validTime,
             image:imageUrl,
           }}
           scrollToFirstError
@@ -202,6 +211,16 @@ const App = () => {
             label="用户ID"
           >
             <Input disabled />
+          </Form.Item>
+
+          <Form.Item
+            name="superior"
+            label="上级编号"
+          >
+            <Input
+              {...a}
+              placeholder="只有首次可以修改,仅普通用户需要"
+            />
           </Form.Item>
 
           <Form.Item
@@ -236,6 +255,9 @@ const App = () => {
               }}
             />
           </Form.Item>
+
+
+
           <Form.Item
             name="password"
             label="密码"

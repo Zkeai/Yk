@@ -18,8 +18,8 @@ export default [
     access: 'canAdmin',
     component: './Admin',
     routes: [
-      { path: '/admin/user-manage', name: '用户管理', icon: 'team', component: './Admin/UserManage' },
-      { path: '/admin/script-manage',name: '脚本管理',  icon: 'smile', component: './Admin/ScriptManage'},
+      { path: '/admin/user-manage', name: '用户管理', icon: 'RedditCircleFilled', component: './Admin/UserManage' },
+      { path: '/admin/script-manage',name: '脚本管理',  icon: 'CodeSandboxSquareFilled', component: './Admin/ScriptManage'},
 
       { component: './404' },
     ],
@@ -30,7 +30,7 @@ export default [
     icon: 'user',
     access: '',
     routes: [
-      { name: '用户管理', path: 'info', icon: 'smile', component: './user/UserCenter'},
+      { name: '用户管理', path: 'info', icon: 'QqCircleFilled', component: './user/UserCenter'},
       { component: './404' },
     ],
   },
@@ -38,13 +38,13 @@ export default [
   {
     path: '/cdk',
     name: '卡密系统',
-    icon: 'creditCard',
+    icon: 'CreditCardOutlined',
     access: 'canKami',
     component: './Admin',
     routes: [
-      { name: '卡密管理', path: 'kami', component: './kami/CdkCenter'},
-      { name: '应用管理', path: 'apply', component: './kami/ApplicationManage'},
-      { name: '时长管理', path: 'time', component: './kami/TimeType'},
+      { name: '卡密管理', path: 'kami', icon:'PropertySafetyFilled',component: './kami/CdkCenter'},
+      { name: '应用管理', path: 'apply', icon:'CloudFilled',component: './kami/ApplicationManage'},
+      { name: '时长管理', path: 'time', icon:'GoogleSquareFilled',component: './kami/TimeType'},
       { component: './404' },
     ],
   },
@@ -52,22 +52,24 @@ export default [
   {
     path: '/device',
     name: '云控中心',
-    icon: 'user',
+    icon: 'CloudUploadOutlined',
     routes: [
       {
         path: 'equipment',
         name: '设备',
+        icon:'RedditCircleFilled>',
         routes: [
-          { name: '安卓设备', path: 'phone', icon: 'smile', component: './DeviceCenter/Equipment/Phone'},
-          { name: '分组管理', path: 'group', component: './DeviceCenter/Equipment/Group'},
+          { name: '安卓设备', path: 'phone', icon: 'MobileFilled', component: './DeviceCenter/Equipment/Phone'},
+          { name: '分组管理', path: 'group',icon:'InstagramFilled', component: './DeviceCenter/Equipment/Group'},
           { component: './404' },
         ],
       },
       {
         path: 'script',
         name: '脚本',
+        icon:'CodeFilled',
         routes: [
-          { name: 'DY系列', path: 'DY', component: './DeviceCenter/Script/DY'},
+          { name: 'DY系列', icon:'YoutubeFilled', path: 'DY', component: './DeviceCenter/Script/DY'},
 
           { component: './404' },
         ],
@@ -75,8 +77,9 @@ export default [
       {
         path: 'task',
         name: '任务',
+        icon:'ContainerFilled',
         routes: [
-          { name: '任务列表', path: 'release', component: './DeviceCenter/Task/Release'},
+          { name: '任务列表',icon:'ContainerFilled', path: 'release', component: './DeviceCenter/Task/Release'},
 
           { component: './404' },
         ],

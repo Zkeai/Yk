@@ -185,6 +185,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         safetyUser.setCreateTime(originUser.getCreateTime());
         safetyUser.setUpdateTime(originUser.getUpdateTime());
         safetyUser.setUuid(originUser.getUuid());
+        safetyUser.setSuperior(originUser.getSuperior());
+        safetyUser.setValidTime(originUser.getValidTime());
         return safetyUser;
     }
 
@@ -208,17 +210,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      * @return 0/1
      */
     @Override
-    public int userEdit(long userID, int userStatus, int userRole, HttpServletRequest request) {
+    public int userEdit(long userID, int userStatus, int userRole,String superior,String validTime, HttpServletRequest request) {
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User user =(User) userObj;
         if(user.getUserRole() != ADMIN_ROLE){
             throw new BusinessException(ErrorCode.NO_AUTH);
         }
 
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+
+        Date date;
+        try {
+            date = df.parse(validTime);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
         User newUser =new User();
         newUser.setUserRole(userRole);
         newUser.setUserStatus(userStatus);
         newUser.setId(userID);
+        newUser.setValidTime(date);
+        newUser.setSuperior(superior);
         return userMapper.updateById(newUser);
     }
 
@@ -234,11 +248,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      * @return int
      */
     @Override
-    public int userInfoEdit(long id, String nickName, String email, String phone, String image, String password)  {
+    public int userInfoEdit(long id, String nickName, String email, String phone, String image, String password, String superior)  {
+
+        //查询上级是否存在
+        QueryWrapper<User> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("userAccount", superior);
+        User user1 = userMapper.selectOne(queryWrapper1);
+        if (user1 == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"不存在该上级");
+        }
+
+
         //2.加密
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
 
-        //查询用户是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
         queryWrapper.eq("userPassword", encryptPassword);
@@ -247,6 +270,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             log.info("user login failed, userAccount cannot match userPassword");
             throw new BusinessException(ErrorCode.PARAMS_ERROR,"密码错误");
         }
+
+
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         String Time=df.format(new Date());// new Date()为获取当前系统时间
@@ -267,7 +292,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         newUser.setPhone(phone);
         newUser.setUsername(nickName);
         newUser.setUpdateTime(date);
-
+        newUser.setSuperior(superior);
         return userMapper.updateById(newUser);
     }
 

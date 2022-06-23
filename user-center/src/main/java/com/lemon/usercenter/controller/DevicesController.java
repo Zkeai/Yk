@@ -1,4 +1,5 @@
 package com.lemon.usercenter.controller;
+import java.util.Date;
 
 
 import com.alibaba.fastjson.JSONArray;
@@ -123,6 +124,36 @@ public class DevicesController {
     }
 
     /**
+     * 修改设备分组
+     * @param devicesEditRequest  devicesEditRequest
+     * @param request request
+     * @return 0、1
+     */
+    @PostMapping("/editPhone")
+    public BaseResponse<Integer> editPhone(@RequestBody DevicesEditRequest devicesEditRequest, HttpServletRequest request) {
+
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        User user =(User) userObj;
+        if (user == null) {
+            throw new BusinessException(ErrorCode.NO_LOGIN);
+        }
+
+        int id = devicesEditRequest.getId();
+        String groupName = devicesEditRequest.getGroupName();
+        if(id <= 0){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Devices devices =new Devices();
+        devices.setId(id);
+        devices.setDeviceGroup(groupName);
+
+        int result = devicesMapper.updateById(devices);
+
+        return ResultUtils.success(result);
+
+    }
+
+    /**
      * 添加设备分组
      * @param devicesGroupAddRequest devicesGroupAddRequest
      * @param request request
@@ -156,7 +187,8 @@ public class DevicesController {
      * @return 设备分组列表
      */
     @GetMapping("/getGroupList")
-    public BaseResponse<List<PhoneGroup>> deviceGroupList(HttpServletRequest request) {
+    public BaseResponse<String> deviceGroupList(HttpServletRequest request) throws Exception {
+        JSONArray newArray = new JSONArray();
 
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User user =(User) userObj;
@@ -167,7 +199,21 @@ public class DevicesController {
         queryWrapper.eq("userid",user.getUserAccount());
 
         List<PhoneGroup> DevicesGroupList = phoneGroupService.list(queryWrapper);
-        return ResultUtils.success(DevicesGroupList);
+        for (PhoneGroup phoneGroup : DevicesGroupList) {
+            JSONObject newObject = new JSONObject();
+
+            newObject.put("id", phoneGroup.getId());
+            newObject.put("name", phoneGroup.getName());
+            newObject.put("userid", phoneGroup.getUserid());
+            newObject.put("status", phoneGroup.getStatus());
+            newObject.put("note", phoneGroup.getNote());
+            newObject.put("createTime", phoneGroup.getCreateTime());
+            newObject.put("updateTime", phoneGroup.getUpdateTime());
+            newArray.add(newObject);
+        }
+        String s = StringUtils.join(newArray,';');
+        String res = Encrypt.AESencrypt(s);
+        return ResultUtils.success(res);
     }
 
     /**
@@ -196,6 +242,12 @@ public class DevicesController {
 
     }
 
+    /**
+     * 修改设备分组
+     * @param deviceGroupEditRequest deviceGroupEditRequest
+     * @param request request
+     * @return 0、1
+     */
     @PostMapping("/editPhoneGroup")
     public BaseResponse<Integer> editPhoneGroup(@RequestBody DeviceGroupEditRequest deviceGroupEditRequest, HttpServletRequest request) {
 
@@ -209,7 +261,6 @@ public class DevicesController {
         if(id <= 0){
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        int state;
         String groupName= deviceGroupEditRequest.getGroupName();
         String note =deviceGroupEditRequest.getNote();
         int status = deviceGroupEditRequest.getStatus();
@@ -217,4 +268,5 @@ public class DevicesController {
         return ResultUtils.success(result);
 
     }
+
 }

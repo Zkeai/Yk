@@ -5,9 +5,11 @@ import com.lemon.usercenter.common.BaseResponse;
 import com.lemon.usercenter.common.ErrorCode;
 import com.lemon.usercenter.common.ResultUtils;
 import com.lemon.usercenter.exception.BusinessException;
+import com.lemon.usercenter.mapper.TasksMapper;
 import com.lemon.usercenter.model.domain.Tasks;
 import com.lemon.usercenter.model.domain.User;
 import com.lemon.usercenter.model.domain.request.tasks.TasksAddRequest;
+import com.lemon.usercenter.model.domain.request.tasks.TasksDeleteRequest;
 import com.lemon.usercenter.model.domain.request.tasks.TasksEditStatusRequest;
 import com.lemon.usercenter.model.domain.request.tasks.TasksSearchRequest;
 import com.lemon.usercenter.service.TasksService;
@@ -27,7 +29,8 @@ public class TasksController {
 
     @Resource
     private TasksService tasksService;
-
+    @Resource
+    private TasksMapper tasksMapper;
     @PostMapping("/add")
     public BaseResponse<String> taskAdd(@RequestBody TasksAddRequest tasksAddRequest){
         if(tasksAddRequest == null){
@@ -114,6 +117,23 @@ public class TasksController {
         return ResultUtils.success(result);
     }
 
+    @PostMapping("/delete")
+    public BaseResponse<Integer> delete(@RequestBody TasksDeleteRequest tasksDeleteRequest,HttpServletRequest request){
+        if(tasksDeleteRequest == null){
+            throw new BusinessException(ErrorCode.NULL_Error);
+        }
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        User user =(User) userObj;
+        if(user == null){
+            throw new BusinessException(ErrorCode.NO_LOGIN);
+        }
+        int id =tasksDeleteRequest.getId();
+
+
+        int result= tasksMapper.deleteById(id);
+
+        return ResultUtils.success(result);
+    }
     private Tasks getSafetyTask(Tasks originTask){
         if(originTask == null){
             return null;

@@ -4,10 +4,11 @@ import {
   ProTable,
 
 } from '@ant-design/pro-components';
-import { Space, Tag,} from 'antd';
-import { useRef} from 'react';
+import {message, Space, Tag,} from 'antd';
+import {useRef} from 'react';
 
-import {searchTask} from "@/services/ant-design-pro/api";
+import {deleteTask,  searchTask} from "@/services/ant-design-pro/api";
+
 
 
 
@@ -23,6 +24,7 @@ export default () => {
   const actionRef = useRef<ActionType>();
 
 
+
   const columns: ProColumns<API.taskListItem>[] = [
 
     {
@@ -30,6 +32,7 @@ export default () => {
       dataIndex: 'scriptName',
       ellipsis: true,
       width: "8%",
+      editable: false,
     },
     {
       disable: true,
@@ -39,7 +42,7 @@ export default () => {
       dataIndex: 'scriptGroup',
       width: "10%",
       align: 'center',
-
+      editable: false,
     },
     {
       title: '类型',
@@ -48,6 +51,7 @@ export default () => {
       width: "8%",
       align: 'center',
       hideInSearch: true,
+      editable: false,
       render: (_, record: {executionModel: string}) => (
         <Space>
 
@@ -65,7 +69,7 @@ export default () => {
       width: "10%",
       align: 'center',
       hideInSearch: true,
-
+      editable: false,
 
     },
     {
@@ -73,7 +77,7 @@ export default () => {
       dataIndex: 'taskNote',
       hideInSearch: true,
       width: "30%",
-
+      editable: false,
     },
 
 
@@ -103,6 +107,7 @@ export default () => {
       dataIndex: 'status',
       align: 'center',
       hideInSearch: true,
+      editable: false,
       render: (_, record: {status: number}) => (
         <Space>
 
@@ -119,6 +124,21 @@ export default () => {
         </Space>
       ),
     },
+    {
+      title: '操作',
+      valueType: 'option',
+      key: 'option',
+      render: (text, record, _, action) => [
+        <a
+          key="editable"
+          onClick={() => {
+            action?.startEditable?.(record.id);
+          }}
+        >
+          编辑
+        </a>,
+      ],
+    },
 
 
   ];
@@ -132,6 +152,19 @@ export default () => {
         columns={columns}
         actionRef={actionRef}
         cardBordered
+        editable={{
+          type: 'multiple',
+          onDelete:async (rowKey, data)=>{
+            const id =data.id;
+            const res = await deleteTask({id})
+            if(res.code === 0 && res.data ===1){
+              message.success('删除成功',1)
+            }else{
+              message.error(res.description,1)
+            }
+
+          }
+        }}
         request = {async () => {
           const userList = await searchTask()
           filtersArray.length = 0

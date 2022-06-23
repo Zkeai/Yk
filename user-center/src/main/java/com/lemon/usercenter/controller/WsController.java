@@ -158,27 +158,24 @@ public class WsController {
                     QueryWrapper<User> queryWrapper1 = new QueryWrapper<>();
                     queryWrapper1.eq("uuid", uuid);
                     User user = WsController.userMapper.selectOne(queryWrapper1);
-                    if(user == null){
-                        JSONObject msg = new JSONObject();
-                        msg.put("type","uuid不存在");
-                        sendOneMessage(uid,msg.toString());
-                    }
-                    assert user != null;
-                    String userid = user.getUserAccount();
-                    Devices newDevices = new Devices();
-                    newDevices.setUuid(Integer.parseInt(uuid));
-                    newDevices.setDeviceName(devName);
-                    newDevices.setDeviceModel(devModel);
-                    newDevices.setUserid(userid);
-                    newDevices.setRemark(remark);
-                    int row = WsController.devicesMapper.insert(newDevices);
-                    if(row > 0){
-                        JSONObject msg = new JSONObject();
-                        msg.put("type","设备添加成功");
-                        sendOneMessage(uid,msg.toString());
-                        sendOneMessage("super","设备上线");
 
-                    }
+                        String userid = user.getUserAccount();
+                        Devices newDevices = new Devices();
+                        newDevices.setUuid(Integer.parseInt(uuid));
+                        newDevices.setDeviceName(devName);
+                        newDevices.setDeviceModel(devModel);
+                        newDevices.setUserid(userid);
+                        newDevices.setRemark(remark);
+                        int row = WsController.devicesMapper.insert(newDevices);
+                        if(row > 0){
+                            JSONObject msg = new JSONObject();
+                            msg.put("type","设备添加成功");
+                            sendOneMessage(uid,msg.toString());
+                            sendOneMessage("super","设备上线");
+
+                        }
+
+
 
                     break;
 

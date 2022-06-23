@@ -18,6 +18,8 @@ declare namespace API {
     createTime:Date;
     updateTime:Date;
     userRole:number;
+    superior:string;
+    validTime:Date;
     uuid:number
 
   };
@@ -59,6 +61,8 @@ declare namespace API {
     userID?:number,
     userRole?: number,
     userStatus?: number;
+    superior?:string;
+    validTime?:string
   };
   type DeleteParams = {
     userID?:number
@@ -70,6 +74,7 @@ declare namespace API {
     phone?:string,
     image?:string,
     password?:string,
+    superior?:string
   };
 
   /**
@@ -227,7 +232,11 @@ declare namespace API {
     deviceName:string,
     deviceModel:string
   }
-
+  /** deviceEditParams  修改设备分组提交参数*/
+  type deviceEditParams = {
+    id:number,
+    groupName:string,
+  }
   /** devicesGroupListSearchParams  获取设备分组返回参数*/
   type devicesListGroupSearchParams = {
     id:string,

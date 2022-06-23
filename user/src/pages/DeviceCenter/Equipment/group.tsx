@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons';
 import moment from 'moment';
 import {addGroup, deleteGroup, editGroup, searchDeviceGroupList} from "@/services/ant-design-pro/api";
+import {decrypt} from "@/utils/aes";
 const { Option } = Select;
 // @ts-ignore
 
@@ -63,18 +64,22 @@ const Group = () => {
 
     const getDevicesGroupList = async () => {
       const {data} = await searchDeviceGroupList();
-      if(data !== null){
-        data.map((m: { id: any; name: any; status: any; note: any; createTime: moment.MomentInput; updateTime: moment.MomentInput; }, index: number)=>{
+      const res =decrypt(data).split(";")
+      if(res[0] !== ""){
+        for(let i = 0 ;i < res.length;i++){
+          const m = JSON.parse(res[i])
           action.push({
-            index:index  + 1,
+            index:i + 1,
             id:m.id,
             groupName:m.name,
+            userid:m.userid,
             status:m.status,
             note:m.note,
-            createTime: moment(m.createTime).format("YYYY-MM-DD HH:mm:ss"),
+            createTime:moment(m.createTime).format("YYYY-MM-DD HH:mm:ss"),
             updateTime: moment(m.updateTime).format("YYYY-MM-DD HH:mm:ss"),
           })
-        })
+        }
+
       }
 
 

@@ -239,7 +239,13 @@ const App = () => {
       ))
     },
 
-
+    {
+      title: '所属软件',
+      dataIndex: 'software',
+      key: 'software',
+      align:'center',
+      ...getColumnSearchProps('software'),
+    },
 
     {
       title: '创建时间',
