@@ -1,9 +1,12 @@
 //export const websocket = ()=>{return new WebSocket("ws://localhost:8080/api/ws/super"}
 
+import {DEV_WEBSOCKET, PROD_WEBSOCKET} from "@/contants";
+
+const isDev = process.env.NODE_ENV === 'development';
 
 export const ws = () => {
-  return new WebSocket("ws://121.5.147.22:8080/api/ws/super")
-  //return new WebSocket("ws://127.0.0.1:8080/api/ws/super")
+
+  return new WebSocket(DEV_WEBSOCKET)
 };
 
 

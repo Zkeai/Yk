@@ -161,7 +161,7 @@ const App = () => {
 
 
   return (
-    <div className='main'>
+    <div className='main-info'>
       <Upload
         name="avatar"
         listType="picture-card"

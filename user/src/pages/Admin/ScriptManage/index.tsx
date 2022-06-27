@@ -339,6 +339,10 @@ export default () => {
                 value: '抖音组',
                 label: '抖音组',
               },
+              {
+                value: '知乎组',
+                label: '知乎组',
+              },
             ]}
             width="xs"
             name="group"

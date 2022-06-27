@@ -8,11 +8,11 @@ var 版本 ="V1.0.0611"
 
 var utils =require('utils.js')
 
-// var url ="http://121.5.147.22/api/"
-// var ws_url ="121.5.147.22:8080"
+var url ="http://121.5.147.22/api/"
+var ws_url ="121.5.147.22:8080"
 
-var url ="http://192.168.10.8:8080/api/"
-var ws_url ="192.168.10.8:8080"
+// var url ="http://192.168.10.4:8080/api/"
+// var ws_url ="192.168.10.4:8080"
 
 var notice ="仅用于自动化测试,不得用于其他用途。"
 
@@ -552,15 +552,13 @@ function 主脚本(uuid,secret,software){
                 console.log("ws排队任务")
                 var reg = new RegExp("[^/]+(?=/$|$)", "g");
                 var 文件名 =decodeURIComponent(reg.exec((text.scriptUrl))[0]) 
-
-
                     var thread = threads.start(function(){
                         运行脚本(text,文件名)
                     });
                  
                 thread.join();
                 
-                //editTask(text.createTime,IMEI,2)
+
                 break;
              case "定时":
                 console.log("ws定时任务")
@@ -574,8 +572,9 @@ function 主脚本(uuid,secret,software){
 
                 thread.join();
                
-                //editTask(text.createTime,IMEI,2)
                 break;
+
+
 
 
         }
@@ -684,7 +683,6 @@ threads.start(function(){
                 res=null
                 //todo   需要监控是不是有任务 10分钟
                 let res = MonitoringTask(IMEI,uuid)
-                
                 if( res !== "已经有执行任务" && res !== null){
                     res =res.msg
                     res =eval('(' + res + ')')
@@ -696,8 +694,11 @@ threads.start(function(){
                         }); 
 
                     intervalThread.join();
-                    //editTask(res.createTime,IMEI,2)
-                }else{
+                   
+                }else if(res === null){
+                    console.log("当前设备没有查询到任务")
+                }
+                else if(res === "已经有执行任务"){
                     console.log("有正在执行的任务")
                 }
 
@@ -720,6 +721,9 @@ threads.start(function(){
 
 })
 
+
+
+//todo
 function 运行脚本(msg,filename){
         utils.downloadFile(msg.scriptUrl,filename)
         var script = require("/sdcard/脚本/"+filename)
@@ -746,12 +750,9 @@ function 运行脚本(msg,filename){
                 if(D_PlLy == undefined){
                     D_PlLy = "";
                 }
-
-
-
                 function exec1(action, args){
-                    args = args || {};
-                   engines.execScript(action.name, action.name + "(" + JSON.stringify(args) + ");\n" + action.toString());
+                 args = args || {};
+                  engineScript = engines.execScript(action.name, action.name + "(" + JSON.stringify(args) + ");\n" + action.toString());
                     
                 }
                 exec1(script.main, {
@@ -775,7 +776,17 @@ function 运行脚本(msg,filename){
                     评论内容:D_PlLy
             })
             break;
-
+            case "知乎测试.js":
+                function exec_zhcs(action, args){
+                    args = args || {};
+                     engineScript = engines.execScript(action.name, action.name + "(" + JSON.stringify(args) + ");\n" + action.toString());
+                       
+                   }
+                   exec_zhcs(script.main, {
+                    createTime:msg.createTime,
+                    ID:msg.T_ID
+            })
+            break;
         }
         
 

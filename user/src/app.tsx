@@ -5,10 +5,8 @@ import {history, Link, RequestConfig} from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import {currentUser as queryCurrentUser} from './services/ant-design-pro/api';
-import {BookOutlined, LinkOutlined} from '@ant-design/icons';
 import defaultSettings from '../config/defaultSettings';
 import {decrypt} from "@/utils/aes";
-import './assets/iconfont/iconfont.css'
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const registerPath = '/user/register';
@@ -120,16 +118,18 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     links: isDev
       ? [
-          <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-            <LinkOutlined />
-            <span>OpenAPI 文档</span>
-          </Link>,
-          <Link to="/~docs" key="docs">
-            <BookOutlined />
-            <span>业务组件文档</span>
-          </Link>,
+          // <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
+          //   <LinkOutlined />
+          //   <span>OpenAPI 文档</span>
+          // </Link>,
+          // <Link to="/~docs" key="docs">
+          //   <BookOutlined />
+          //   <span>业务组件文档</span>
+          // </Link>,
         ]
-      : [],
+      : [
+
+      ],
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
