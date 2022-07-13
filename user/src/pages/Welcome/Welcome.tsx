@@ -40,7 +40,7 @@ const App = () => {
 
       <Modal
         width="300px"
-        style={{marginTop:"35vh",marginRight:"700px",height:"200px"}}
+        style={{marginTop:"36vh",marginRight:"36%",height:"200px"}}
         title="leCloud云控声明"
         visible={isModalVisible}
         onOk={handleOk}

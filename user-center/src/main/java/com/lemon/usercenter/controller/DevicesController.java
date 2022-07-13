@@ -124,7 +124,7 @@ public class DevicesController {
     }
 
     /**
-     * 修改设备分组
+     * 修改设备
      * @param devicesEditRequest  devicesEditRequest
      * @param request request
      * @return 0、1

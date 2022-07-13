@@ -113,15 +113,6 @@ declare namespace API {
   };
   /** editSoftwareResult  修改软件返回参数*/
   type editSoftwareResult = number;
-  /** useKamiParams  使用卡密提交参数*/
-  type useKamiParams = {
-    userid?:string,
-    software?:string,
-    kami?:string,
-    machine?:string,
-    ip?:string,
-  };
-
 
 
   /**
@@ -210,7 +201,7 @@ declare namespace API {
     prefix:string
   };
 
-  type useKamiResult = string;
+
 
 
   /**
@@ -354,6 +345,91 @@ declare namespace API {
 
 
 
+
+  /** keyGroupSearch  搜索关键词分组返回参数*/
+  type keyGroupSearch = {
+    id:number,
+    num:number,
+    groupName:string,
+    note:string,
+    userid:string,
+    createTime:Date,
+    updateTime:Date,
+    status:number,
+
+  }
+
+  /** keyGroupCreate  创建关键词分组提交参数*/
+  type keyGroupCreate = {
+    groupName:string,
+    note:string,
+  }
+  /** editKeyGroupResult  修改关键词分组返回参数*/
+  type editKeyGroupResult = number;
+
+  /** editKeyGroupParams  修改关键词分组提交参数*/
+  type editKeyGroupParams = {
+    id:number,
+    groupName:string,
+    note:string,
+    status:number
+  };
+
+  /** KeyGroupResultDelete  删除关键词分组提交参数*/
+  type KeyGroupResultDelete = {
+    id:number,
+    groupName:string
+  };
+
+
+  /** keySearch  搜索关键词返回参数*/
+  type keySearch = {
+    id:number,
+    keyWord:string,
+    content:string,
+    keyGroup:string,
+    note:string,
+    userid:string,
+    createTime:Date,
+    updateTime:Date,
+    status:number
+
+  }
+
+  /** keyCreate  创建关键词提交参数*/
+  type keyCreate = {
+    keyWord:string,
+    content:string,
+    keyGroup:string,
+    status:number,
+    note:string
+  }
+  /** editKeyResult  修改关键词返回参数*/
+  type editKeyResult = number;
+
+  /** editKeyParams  修改关键词提交参数*/
+  type editKeyParams = {
+    id:number,
+    content:string,
+    keyGroup:string,
+    note:string,
+    status:number
+  };
+
+  /** KeyResultDelete  删除关键词提交参数*/
+  type KeyResultDelete = {
+    id:number,
+    keyWord:string
+  };
+
+
+
+
+
+
+
+
+
   /**
    * pro自带
    */
@@ -376,12 +452,7 @@ declare namespace API {
     progress?: number;
   };
 
-  type RuleList = {
-    data?: RuleListItem[];
-    /** 列表的内容总数 */
-    total?: number;
-    success?: boolean;
-  };
+
 
   type FakeCaptcha = {
     code?: number;

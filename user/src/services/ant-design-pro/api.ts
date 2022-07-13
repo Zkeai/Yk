@@ -214,22 +214,6 @@ export async function deleteKami(body: API.kamiDelete, options?: { [p: number]: 
   });
 }
 
-/** 使用卡密 POST  /api/kami/useKami */
-export async function invest(body: API.useKamiParams, options?: { [key: string]: any }) {
-  return request<API.BaseResponse<API.useKamiResult>>('/api/kami/useKami', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
-}
-
-
-
-
-
 
 
 /** 查询设备列表 GET /api/device/getList */
@@ -381,6 +365,99 @@ export async function searchTask(options?: { [key: string]: any }) {
 /** 删除任务 POST /api/task/delete */
 export async function deleteTask(body: API.typeDelete, options?: { [p: number]: any }) {
   return request<API.BaseResponse<number>>('/api/task/delete', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+  /**
+   * 资源管理
+   */
+
+  /** 搜索关键词分组 GET /api/resource/searchKeyGroup */
+  export async function searchKeyGroup(options?: { [key: string]: any }) {
+    return request<API.BaseResponse<API.keyGroupSearch[]>>('/api/resource/searchKeyGroup', {
+      method: 'GET',
+      ...(options || {}),
+    });
+  }
+
+/** 创建关键词分组 POST /api/resource/addKeyGroup */
+export async function addKeyGroup(body: API.keyGroupCreate, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<String>>('/api/resource/addKeyGroup ', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 修改关键词分组 POST /api/resource/editKeyGroup */
+export async function editKeyGroup(body: API.editKeyGroupParams, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<API.editKeyGroupResult>>('/api/resource/editKeyGroup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 删除关键词分组 POST /api/resource/deleteKeyGroup */
+export async function deleteKeyGroup(body: API.KeyGroupResultDelete, options?: { [p: number]: any }) {
+  return request<API.BaseResponse<number>>('/api/resource/deleteKeyGroup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+
+/** 搜索关键词 GET /api/resource/searchKey */
+export async function searchKey(options?: { [key: string]: any }) {
+  return request<API.BaseResponse<API.keySearch[]>>('/api/resource/searchKey', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/** 创建关键词 POST /api/resource/addKey */
+export async function addKey(body: API.keyCreate, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<String>>('/api/resource/addKey ', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 修改关键词 POST /api/resource/editKey */
+export async function editKey(body: API.editKeyParams, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<API.editKeyResult>>('/api/resource/editKey', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 删除关键词 POST /api/resource/deleteKey */
+export async function deleteKey(body: API.KeyResultDelete, options?: { [p: number]: any }) {
+  return request<API.BaseResponse<number>>('/api/resource/deleteKey', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -2,11 +2,9 @@
 
 import {DEV_WEBSOCKET, PROD_WEBSOCKET} from "@/contants";
 
-const isDev = process.env.NODE_ENV === 'development';
-
 export const ws = () => {
 
-  return new WebSocket(DEV_WEBSOCKET)
+  return new WebSocket(PROD_WEBSOCKET)
 };
 
 

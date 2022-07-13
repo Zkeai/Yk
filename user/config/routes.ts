@@ -171,10 +171,23 @@ export default [
     icon: 'BarsOutlined',
     routes: [
       {
-        name: '资源分组',
-        icon: 'ProfileFilled',
+        name: '词库',
+        icon: 'ProfileFilled ',
         path: 'release',
-        component: './Resource/Type',
+        routes: [
+          {
+            name: '词库分组',
+            icon: 'ProfileTwoTone',
+            path: 'keyGroup',
+            component: './Resource/Key/KeyGroup',
+          },
+          {
+            name: '词库',
+            icon: 'ProjectTwoTone',
+            path: 'keyWord',
+            component: './Resource/Key/KeyWord',
+          }
+        ]
       },
       {
         component: './404',
