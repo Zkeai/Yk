@@ -1,0 +1,29 @@
+{
+  "assets": [],
+  "build": {
+    "build_id": "572E1224-27",
+    "build_number": 27,
+    "build_time": 1656315622841,
+    "release": false
+  },
+  "encryptLevel": 1,
+  "useFeatures": [],
+  "icon": "res/logo.png",
+  "launchConfig": {
+    "displaySplash": true,
+    "hideLogs": false,
+    "splashIcon": "res/splashIcon.png",
+    "splashText": "LeCloud",
+    "stableMode": false
+  },
+  "main": "main.js",
+  "name": "lecloud",
+  "optimization": {
+    "removeOpenCv": true,
+    "unusedResources": true
+  },
+  "packageName": "com.lecloud.lemox",
+  "scripts": {},
+  "versionCode": 1,
+  "versionName": "1.0.0"
+}

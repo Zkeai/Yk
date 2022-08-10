@@ -31,6 +31,7 @@ utils.downloadFile=function(url,fileName){
 
     return true;
 }
+
 /** 去除限制*/
 utils.Remove=function(){
     importClass(com.stardust.autojs.core.accessibility.AccessibilityBridge.WindowFilter);
@@ -52,6 +53,7 @@ utils.Remove=function(){
     }
 
 }
+
 /** 曲线滑动
  * 
  * @param {*} qx 
@@ -111,6 +113,7 @@ utils.Remove=function(){
   result.y = (ay * tCubed) + (by * tSquared) + (cy * Offset) + ScreenPoint[0].y;
   return result;
 };
+
 /** 免root强制结束应用 */
 utils.killapp = function (pkgName) {
     log('func killapp');
@@ -146,6 +149,8 @@ utils.killapp = function (pkgName) {
     home()
     sleep(2000)
 }
+
+
 /** 脚本完成后修改设备 */
 utils.editTask=function(createTime,device,status){
     let thread = threads.start(function(){
@@ -182,18 +187,5 @@ utils.stop_autojs=function(){
     }
 
 }
-/** 结束主程序之外的其他脚本 */
-utils.结束其他脚本= function () {
-    var 当前引擎 = engines.myEngine()
-    var 所有引擎 = engines.all()    
-    var 引擎数量 = 所有引擎.length    
-    for (var i = 0; i < 引擎数量; i++) {        
-       var 引擎 = 所有引擎[i]        
-       if (引擎 != 当前引擎) {            
-         引擎.forceStop()        
-       }
-    }
-}
-
 
 module.exports =utils

@@ -8,11 +8,11 @@ var 版本 ="V1.0.0611"
 
 var utils =require('utils.js')
 
-var url ="http://121.5.147.22/api/"
-var ws_url ="121.5.147.22:8080"
+//var url ="http://121.5.147.22/api/"
+//var ws_url ="backend.lemox.club:8080"
 
-// var url ="http://192.168.10.4:8080/api/"
-// var ws_url ="192.168.10.4:8080"
+var url ="https://backend.lemox.club/api/"
+var ws_url ="backend.lemox.club"
 
 var notice ="仅用于自动化测试,不得用于其他用途。"
 
@@ -423,7 +423,7 @@ function 主脚本(uuid,secret,software){
             toastLog("未知错误")
         }
         function startWs(){
-            let ws = web.newWebSocket("ws://"+ws_url+"/api/ws/"+IMEI, {
+            let ws = web.newWebSocket("wss://"+ws_url+"/api/ws/"+IMEI, {
                 eventThread: 'this'
                 });
                 ws.on("open", (res, ws) => {
