@@ -5,6 +5,10 @@
 
 
 var utils ={}
+//var url = "http://192.168.10.4:8080/api/task/editStatus"
+var url ="https://backend.lemox.club/api/task/editStatus"
+
+
 
 /** 下载文件到本地*/
 utils.downloadFile=function(url,fileName){
@@ -18,7 +22,7 @@ utils.downloadFile=function(url,fileName){
         })
       )
       .execute();
-    var fs = new java.io.FileOutputStream("/sdcard/脚本/"+fileName);
+    var fs = new java.io.FileOutputStream("/sdcard/Le/main/"+fileName);
     var buffer = util.java.array("byte", 1024); //byte[]
     var byteSum = 0; //总共读取的文件大小
     var byteRead; //每次读取的byte数
@@ -155,7 +159,7 @@ utils.killapp = function (pkgName) {
 utils.editTask=function(createTime,device,status){
     let thread = threads.start(function(){
     //http://192.168.10.8:8080/api/task/editStatus
-    var res = http.postJson("http://121.5.147.22/api/task/editStatus", {
+    var res = http.postJson(url, {
         "createTime": createTime,
         "device":device,
         "status":status

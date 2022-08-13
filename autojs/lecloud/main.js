@@ -4,15 +4,21 @@
  */
 
 "ui";
-var 版本 ="V1.0.0611"
+var 版本 ="V1.0"
+var 主文件路径 = "/sdcard/Le/main/"
+//https://cdn.lemox.club/Le/utils.js
+var utils_url ="https://lemon-1251938302.cos.ap-shanghai.myqcloud.com/script/utils.js"
+var MD5_url ="https://cdn.lemox.club/Le/md5.js"
+var utils;
+var md5;
 
-var utils =require('utils.js')
 
-//var url ="http://121.5.147.22/api/"
-//var ws_url ="backend.lemox.club:8080"
+
+//var url ="http://192.168.10.4:8080/api/"
+//var ws_url ="ws://192.168.10.4:8080/api/ws/"
 
 var url ="https://backend.lemox.club/api/"
-var ws_url ="backend.lemox.club"
+var ws_url ="wss://backend.lemox.club/api/ws/"
 
 var notice ="仅用于自动化测试,不得用于其他用途。"
 
@@ -317,6 +323,28 @@ if (auto.service == null) {
     var storage = storages.create("leCloud");
     初始化()
     function 初始化(){
+        //创建文件夹 并网络下载主要文件
+        files.createWithDirs(主文件路径) 
+        //下载utils
+        var intervalThread = threads.start(function(){
+            if(downloadFile(utils_url,"utils.js")) {
+                console.log("工具类文件加载完毕")
+                 utils =require(主文件路径+'utils.js')
+           }
+        }); 
+
+        intervalThread.join();
+        //下载md5
+        var intervalThread = threads.start(function(){
+            if(downloadFile(MD5_url,"md5.js")){
+                console.log("加密类文件加载完毕")
+                md5 = require(主文件路径+'md5.js');
+            }
+        }); 
+
+        intervalThread.join();
+
+
         if (storage.contains("uuid") == true) {
             let uuid_ = storage.get("uuid")
             ui.input_uuid.setText(uuid_)
@@ -420,10 +448,10 @@ function 主脚本(uuid,secret,software){
             }
             return Ws
         } catch (error) {
-            toastLog("未知错误")
+            toastLog(error)
         }
         function startWs(){
-            let ws = web.newWebSocket("wss://"+ws_url+"/api/ws/"+IMEI, {
+            let ws = web.newWebSocket(ws_url+IMEI, {
                 eventThread: 'this'
                 });
                 ws.on("open", (res, ws) => {
@@ -463,7 +491,7 @@ function 主脚本(uuid,secret,software){
                             var userid = html.data;
                         //获取机器码
                         function 设备信息加密(){
-                            var MD5 = require('./md5.js');
+
                             return MD5.hex_md5(device.model,device.fingerprint,device.serial,device.getIMEI(),false,true)
                         }
                         var machine = 设备信息加密()
@@ -532,7 +560,7 @@ function 主脚本(uuid,secret,software){
         Ws.on("text", (text, ws) => {
             console.info("服务端消息: "+ text);
            var text =eval('(' + text + ')')
-
+           console.log(text)
            switch(text.type){
 
             case "addDevice":
@@ -549,7 +577,7 @@ function 主脚本(uuid,secret,software){
                 ws.send(msg);
             break;
             case "排队":
-                console.log("ws排队任务")
+                console.log("收到云端排队任务")
                 var reg = new RegExp("[^/]+(?=/$|$)", "g");
                 var 文件名 =decodeURIComponent(reg.exec((text.scriptUrl))[0]) 
                     var thread = threads.start(function(){
@@ -561,10 +589,10 @@ function 主脚本(uuid,secret,software){
 
                 break;
              case "定时":
-                console.log("ws定时任务")
+                
                 var reg = new RegExp("[^/]+(?=/$|$)", "g");
                 var 文件名 =decodeURIComponent(reg.exec((text.scriptUrl))[0]) 
-
+                console.log("收到云端定时任务")
                     var thread = threads.start(function(){
                         运行脚本(text,文件名)
                     });
@@ -726,7 +754,7 @@ threads.start(function(){
 //todo
 function 运行脚本(msg,filename){
         utils.downloadFile(msg.scriptUrl,filename)
-        var script = require("/sdcard/脚本/"+filename)
+        var script = require("/sdcard/Le/main/"+filename)
         utils.editTask(msg.createTime,IMEI,1)
         switch(filename){
             case "抖音养号.js":
@@ -776,15 +804,17 @@ function 运行脚本(msg,filename){
                     评论内容:D_PlLy
             })
             break;
-            case "知乎测试.js":
+            case "知乎文章评论.js":
                 function exec_zhcs(action, args){
                     args = args || {};
+                    console.log("运行脚本:"+filename)
                      engineScript = engines.execScript(action.name, action.name + "(" + JSON.stringify(args) + ");\n" + action.toString());
-                       
+                     files.remove("/sdcard/Le/main/"+filename)
                    }
                    exec_zhcs(script.main, {
                     createTime:msg.createTime,
-                    ID:msg.T_ID
+                    ID:msg.T_ID,
+                    commentArea:msg.commentArea,
             })
             break;
         }
@@ -834,4 +864,30 @@ function compare(date1){
         res= true
     }
     return res;
+}
+
+/** 下载文件到本地*/
+function downloadFile(url,fileName){
+    var url = url;
+    
+    var call = http
+      .client()
+      .newCall(
+        http.buildRequest(url, {
+          method: "GET",
+        })
+      )
+      .execute();
+    var fs = new java.io.FileOutputStream("/sdcard/Le/main/"+fileName);
+    var buffer = util.java.array("byte", 1024); //byte[]
+    var byteRead; //每次读取的byte数
+    var byteSum = 0
+    var is = call.body().byteStream();
+    while ((byteRead = is.read(buffer)) != -1) {
+      byteSum += byteRead;
+      fs.write(buffer, 0, byteRead); //读取
+
+    }
+
+    return true;
 }
