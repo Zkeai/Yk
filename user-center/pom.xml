@@ -29,6 +29,13 @@
             <version>2.2.2</version>
         </dependency>
 
+        <!--邮件-->
+        <dependency>
+            <groupId>io.github.biezhi</groupId>
+            <artifactId>oh-my-email</artifactId>
+            <version>0.0.4</version>
+        </dependency>
+
         <!--rabbitmq-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

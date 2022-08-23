@@ -2,13 +2,11 @@ package com.lemon.usercenter.listener;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lemon.usercenter.controller.WsController;
+import com.lemon.usercenter.model.domain.controller.WsController;
 import com.lemon.usercenter.mapper.DevicesMapper;
 import com.lemon.usercenter.mapper.TasksMapper;
 import com.lemon.usercenter.model.domain.Devices;
-import com.lemon.usercenter.model.domain.Software;
 import com.lemon.usercenter.model.domain.Tasks;
-import com.lemon.usercenter.model.domain.User;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessagePostProcessor;
@@ -19,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 

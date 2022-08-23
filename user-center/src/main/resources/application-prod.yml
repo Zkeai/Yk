@@ -12,7 +12,7 @@ spring:
       password: lemon666
   #session失效时间
   session:
-    timeout: 86400
+    timeout: 10800s
   #rabbitmq配置
   rabbitmq:
     virtual-host: /yk

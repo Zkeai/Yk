@@ -69,6 +69,32 @@ function main(args){
         
 }
 
-main(args)
+var thread = threads.start(function(){
+    var res = http.postJson("https://api.x-metash.com/api/prod/NFTMall/h5/home/summary",
+    {
+        "isPresell":false,
+        "isTimeAsc":false,
+        "search":"hiphop",
+        "pageNum":1,
+        "pageSize":10,
+        "reset":"yes"
+    },
+    {
+        headers:{
+            "Host": "api.x-metash.com",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91aWQiOjg5NzExNywibG9naW5fdXNlcl9rZXkiOiIwYzVlZTZmNS1jYzU4LTQyNTMtOTdjMy1hMDA2YTNhZGFlMTIifQ.s94cm6u55YNRQA4Vw-zpV8mvNlvlAkUodSncVGPHNMXR50nTkIx9biYjV9rT86vQkWoPraTrsn204IJ7_V5Hbw",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
+            "Origin": "https://xmeta.x-metash.com",
+            "Referer": "https://xmeta.x-metash.com/"
+        }
+    }
+    );
+    var html = res.body.string();
+    var html = JSON.parse(html);
+    data = html.data;
 
+})
+thread.join()
 
+console.log(data)

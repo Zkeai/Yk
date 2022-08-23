@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon.usercenter.mapper.EmailMapper">
+
+    <resultMap id="BaseResultMap" type="com.lemon.usercenter.model.domain.Email">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="userid" column="userid" jdbcType="VARCHAR"/>
+            <result property="typeEmail" column="typeEmail" jdbcType="VARCHAR"/>
+            <result property="fromEmail" column="fromEmail" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="toEmail" column="toEmail" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,userid,typeEmail,
+        fromEmail,password,title,
+        toEmail
+    </sql>
+</mapper>
