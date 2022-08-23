@@ -13,7 +13,7 @@ const Settings: LayoutSettings & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: '用户中心',
+  title: '云控管理',
   pwa: false,
   logo: "https://lemon-1251938302.cos.ap-shanghai.myqcloud.com/userCenterAvatar/4.png",
   iconfontUrl: '',

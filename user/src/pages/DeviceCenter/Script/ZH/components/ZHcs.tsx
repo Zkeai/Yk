@@ -1,8 +1,8 @@
 import {
   ProCard,
   ProForm,
-   ProFormDateTimePicker,
-  ProFormDigit, ProFormRadio, ProFormText,
+  ProFormDateTimePicker,
+  ProFormDigit, ProFormRadio, ProFormSelect, ProFormText,
   ProFormTextArea, ProFormTreeSelect,
   StepsForm,
 } from '@ant-design/pro-components';
@@ -204,7 +204,25 @@ export default (props: any) => {
             <ProForm.Group>
               <ProFormTextArea tooltip="作品ID" width="xl" name="T_ID" label="文章ID(一行一条)"/>
             </ProForm.Group>
-
+            {/*话术分组*/}
+            <ProForm.Group>
+              <ProFormSelect
+                options={[
+                  {
+                    value: '6',
+                    label: '6%',
+                  },
+                  {
+                    value: '12',
+                    label: '12%',
+                  },
+                ]}
+                initialValue="6"
+                width="xs"
+                name="taxRate"
+                label="话术分组"
+              />
+            </ProForm.Group>
           </ProCard>
 
 

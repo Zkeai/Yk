@@ -15,6 +15,7 @@ import '../ChangeInfo/index.less'
 
 
 
+// @ts-ignore
 import { useModel } from 'umi';
 import {userinfoEdit} from "@/services/ant-design-pro/api";
 import {Host} from "@/contants";
@@ -103,7 +104,6 @@ const App = () => {
   const [form] = Form.useForm();
   const { initialState } = useModel('@@initialState');
   const [imageUrl, setImageUrl] = useState<any>(initialState?.currentUser?.avatarUrl);
-  console.log(initialState?.currentUser?.superior)
   const a ={
     disabled:initialState?.currentUser?.superior !== '' && initialState?.currentUser?.superior !== undefined
   }

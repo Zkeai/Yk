@@ -11,7 +11,7 @@ import {
 
 } from '@ant-design/icons';
 import moment from 'moment';
-import '../Key/index.less'
+import '../index.less'
 import {
   addKey, deleteKey,
   editKey,
@@ -20,6 +20,7 @@ import {
 } from "@/services/ant-design-pro/api";
 import {useModel} from "@@/plugin-model/useModel";
 import TextArea from "antd/es/input/TextArea";
+import {decrypt} from "@/utils/aes";
 
 const { Option } = Select;
 
@@ -43,13 +44,22 @@ const App = () => {
 
   const keyGroupTempList: any= []
   const getKeyGroupList = async () =>{
-    const {data} =  await searchKeyGroup()
-    for(let i = 0;i < data.length;i++){
-      keyGroupTempList.push({
-        keyGroup:data[i].groupName,
-        id:data[i].id
-      })
+    const userList =  await searchKeyGroup()
+    const res =decrypt(userList.data).split(";")
+
+    if(res[0] !== ""){
+      for(let i = 0;i < res.length;i++){
+        const m = JSON.parse(res[i])
+
+        keyGroupTempList.push({
+          keyGroup: m.groupName,
+          id: m.id
+        })
+      }
+
     }
+
+
 
     saveKeyGroup(keyGroupTempList)
 
@@ -69,7 +79,6 @@ const App = () => {
 
   }
   const wordKeyEdit = (value: any)=>{
-
     formRef.setFieldsValue(value)
     setEditIsModalVisible(true)
 
@@ -81,8 +90,12 @@ const App = () => {
   useEffect( () => {
     const getKeyWord = async () => {
       const {data} = await searchKey();
-      if(data !== null){
-        data.map((m: { id: number; keyWord: string;content: string;keyGroup: string; status: number ; note: string;userid: string; createTime: moment.MomentInput; updateTime: moment.MomentInput; })=>{
+      const res =decrypt(data).split(";")
+
+      if(res[0] !== ""){
+
+        for(let i = 0 ;i < res.length;i++){
+          const m = JSON.parse(res[i])
           temp.push({
             id:m.id,
             keyWord:m.keyWord,
@@ -94,7 +107,9 @@ const App = () => {
             createTime: moment(m.createTime).format("YYYY-MM-DD HH:mm:ss"),
             updateTime: moment(m.updateTime).format("YYYY-MM-DD HH:mm:ss"),
           })
-        })
+        }
+
+
       }
 
       setKeyWord(temp)

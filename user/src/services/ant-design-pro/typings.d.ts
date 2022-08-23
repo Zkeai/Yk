@@ -38,7 +38,7 @@ declare namespace API {
     currentAuthority?: string;
   };
   type RegisterResult = number;
-  type DeleteResult = number;
+  type DeleteResult = boolean;
   type userinfoChangeResult = number;
 
   /**
@@ -326,6 +326,10 @@ declare namespace API {
     msg: string
     createTime:string
   };
+  /** comKeyWordSearchParams  根据分组搜索术语提交参数*/
+  type comKeyWordSearchParams = {
+    keyGroup:string,
+  };
 
   /** addTaskItem  添加任务返回参数*/
   type addTaskItem = string
@@ -359,13 +363,34 @@ declare namespace API {
 
   }
 
+
+  /** comGroupSearch  搜索术语分组返回参数*/
+  type comGroupSearch = {
+    id:number,
+    num:number,
+    groupName:string,
+    note:string,
+    userid:string,
+    createTime:Date,
+    updateTime:Date,
+    status:number,
+
+  }
+
   /** keyGroupCreate  创建关键词分组提交参数*/
   type keyGroupCreate = {
     groupName:string,
     note:string,
   }
+  /** comGroupCreate  创建术语分组提交参数*/
+  type comGroupCreate = {
+    groupName:string,
+    note:string,
+  }
   /** editKeyGroupResult  修改关键词分组返回参数*/
   type editKeyGroupResult = number;
+  /** editComGroupResult  修改术语分组返回参数*/
+  type editComGroupResult = number;
 
   /** editKeyGroupParams  修改关键词分组提交参数*/
   type editKeyGroupParams = {
@@ -374,13 +399,23 @@ declare namespace API {
     note:string,
     status:number
   };
-
+  /** editComGroupParams  修改术语分组提交参数*/
+  type editComGroupParams = {
+    id:number,
+    groupName:string,
+    note:string,
+    status:number
+  };
   /** KeyGroupResultDelete  删除关键词分组提交参数*/
   type KeyGroupResultDelete = {
     id:number,
     groupName:string
   };
-
+  /** ComGroupResultDelete  删除术语分组提交参数*/
+  type ComGroupResultDelete = {
+    id:number,
+    groupName:string
+  };
 
   /** keySearch  搜索关键词返回参数*/
   type keySearch = {
@@ -396,6 +431,32 @@ declare namespace API {
 
   }
 
+  /** searchComments  搜索术语返回参数*/
+  type searchComments = {
+    id:number,
+    keyWord:string,
+    content:string,
+    comGroup:string,
+    note:string,
+    userid:string,
+    createTime:Date,
+    updateTime:Date,
+    status:number
+
+  }
+  /** searchGroupComments  根据分组搜索术语返回参数*/
+  type searchGroupComments = {
+    id:number,
+    keyWord:string,
+    content:string,
+    comGroup:string,
+    note:string,
+    userid:string,
+    createTime:Date,
+    updateTime:Date,
+    status:number
+
+  }
   /** keyCreate  创建关键词提交参数*/
   type keyCreate = {
     keyWord:string,
@@ -404,8 +465,18 @@ declare namespace API {
     status:number,
     note:string
   }
+  /** commentsCreate  创建术语提交参数*/
+  type commentsCreate = {
+    keyWord:string,
+    content:string,
+    keyGroup:string,
+    status:number,
+    note:string
+  }
   /** editKeyResult  修改关键词返回参数*/
   type editKeyResult = number;
+  /** editCommentsResult  修改术语返回参数*/
+  type editCommentsResult = number;
 
   /** editKeyParams  修改关键词提交参数*/
   type editKeyParams = {
@@ -415,18 +486,64 @@ declare namespace API {
     note:string,
     status:number
   };
-
+  /** editCommentsParams  修改术语提交参数*/
+  type editCommentsParams = {
+    id:number,
+    content:string,
+    keyGroup:string,
+    note:string,
+    status:number
+  };
   /** KeyResultDelete  删除关键词提交参数*/
   type KeyResultDelete = {
     id:number,
     keyWord:string
   };
+  /** CommentsResultDelete  删除关键词提交参数*/
+  type CommentsResultDelete = {
+    id:number,
+    keyWord:string
+  };
+  /** emailSendParams  发送邮件提交参数*/
+  type emailSendParams = {
+    type: string,
+    from: string,
+    password: string,
+    title: string,
+    content: string,
+    to: string
+  };
 
+  /** searchEmail  搜索邮件配置返回参数*/
+  type searchEmail = {
+    id:number,
+    typeEmail: string,
+    toEmail:string,
+    fromEmail:string,
+    password:string,
+    title:string
 
+  }
 
+  /** addEmail  增加邮件配置返回参数*/
+  type addEmail = {
+    typeEmail: string,
+    toEmail:string,
+    fromEmail:string,
+    password:string,
+    title:string
 
+  }
+  /** editEmail  修改邮件配置返回参数*/
+  type editEmail = {
+    id:number;
+    typeEmail: string,
+    toEmail:string,
+    fromEmail:string,
+    password:string,
+    title:string
 
-
+  }
 
 
 

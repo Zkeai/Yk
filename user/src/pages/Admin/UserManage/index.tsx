@@ -4,8 +4,9 @@ import ProTable from '@ant-design/pro-table';
 import {deleteUser, edit, searchUser} from "@/services/ant-design-pro/api";
 import {Image} from "antd";
 import message from "antd/es/message";
+import {decrypt} from "@/utils/aes";
 
-
+const newArray: any[] = []
 const columns: ProColumns<API.CurrentUser>[] = [
   {
     dataIndex: 'id',
@@ -157,8 +158,35 @@ export default () => {
       cardBordered
       request = {async () => {
        const userList = await searchUser()
+        const re =decrypt(userList.data).split(";")
+        newArray.length=0
+        if(re[0] !== ""){
+          for(let i = 0 ;i < re.length;i++){
+            const m = JSON.parse(re[i])
+
+            newArray.push({
+              index:i + 1,
+              id:m.id,
+              username:m.username,
+              userAccount:m.userAccount,
+              avatarUrl:m.avatarUrl,
+              gender:m.gender,
+              phone:m.phone,
+              email:m.email,
+              userStatus:m.userStatus,
+              userRole:m.userRole,
+              createTime:m.createTime,
+              validTime:m.validTime,
+              superior:m.superior
+
+
+            })
+          }
+
+        }
+
         return {
-         data:userList.data
+         data: newArray
         }
 
       }}
@@ -182,7 +210,7 @@ export default () => {
         onDelete:async (rowKey, data)=>{
           const userID =data.id;
           const res = await deleteUser({userID})
-          if(res.code === 0 && res.data ===true){
+          if(res.code === 0 && res.data){
             message.success('删除成功',1)
           }else{
             message.error(res.description,1)

@@ -11,13 +11,14 @@ import {
 
 } from '@ant-design/icons';
 import moment from 'moment';
-import '../Key/index.less'
+import '../index.less'
 import {
   addKeyGroup, deleteKeyGroup,
   editKeyGroup,
   searchKeyGroup,
 
 } from "@/services/ant-design-pro/api";
+import {decrypt} from "@/utils/aes";
 
 const { Option } = Select;
 
@@ -56,8 +57,11 @@ const App = () => {
   useEffect( () => {
     const getKeyGroup = async () => {
       const {data} = await searchKeyGroup();
-      if(data !== null){
-        data.map((m: { id: number; groupName: string; status: number ;num: number,  note: string;userid: string; createTime: moment.MomentInput; updateTime: moment.MomentInput; })=>{
+      const res =decrypt(data).split(";")
+
+      if(res[0] !== ""){
+        for(let i = 0 ;i < res.length;i++){
+          const m = JSON.parse(res[i])
           temp.push({
             id:m.id,
             groupName:m.groupName,
@@ -68,7 +72,8 @@ const App = () => {
             createTime: moment(m.createTime).format("YYYY-MM-DD HH:mm:ss"),
             updateTime: moment(m.updateTime).format("YYYY-MM-DD HH:mm:ss"),
           })
-        })
+        }
+
       }
 
       setKeyGroup(temp)

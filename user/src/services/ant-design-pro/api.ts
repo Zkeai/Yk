@@ -1,7 +1,8 @@
 // @ts-ignore
 /* eslint-disable */
 // @ts-ignore
-import { request } from 'umi';
+import request from '@/plugins/globalRequest';
+
 
 
 
@@ -386,9 +387,25 @@ export async function deleteTask(body: API.typeDelete, options?: { [p: number]: 
     });
   }
 
-/** 创建关键词分组 POST /api/resource/addKeyGroup */
-export async function addKeyGroup(body: API.keyGroupCreate, options?: { [key: string]: any }) {
-  return request<API.BaseResponse<String>>('/api/resource/addKeyGroup ', {
+/** 搜索关键词 GET /api/resource/searchKey */
+export async function searchKey(options?: { [key: string]: any }) {
+  return request<API.BaseResponse<API.keySearch[]>>('/api/resource/searchKey', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/** 搜索术语分组 GET /api/comments/searchComGroup */
+export async function searchComGroup(options?: { [key: string]: any }) {
+  return request<API.BaseResponse<API.comGroupSearch[]>>('/api/comments/searchComGroup', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+/** 根据分组搜索术语 POST /api/comments/searchGroupComments*/
+export async function searchGroupComments(body: API.comKeyWordSearchParams,options?: { [key: string]: any }) {
+
+  return request<API.BaseResponse<API.searchGroupComments[]>>('/api/comments/searchGroupComments', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -397,6 +414,17 @@ export async function addKeyGroup(body: API.keyGroupCreate, options?: { [key: st
     ...(options || {}),
   });
 }
+/** 搜索术语 GET /api/comments/searchComments */
+export async function searchComments(options?: { [key: string]: any }) {
+  return request<API.BaseResponse<API.searchComments[]>>('/api/comments/searchComments', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+
+
+
 
 /** 修改关键词分组 POST /api/resource/editKeyGroup */
 export async function editKeyGroup(body: API.editKeyGroupParams, options?: { [key: string]: any }) {
@@ -409,7 +437,17 @@ export async function editKeyGroup(body: API.editKeyGroupParams, options?: { [ke
     ...(options || {}),
   });
 }
-
+/** 修改术语分组 POST /api/comments/editComGroup */
+export async function editComGroup(body: API.editComGroupParams, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<API.editComGroupResult>>('/api/comments/editComGroup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
 /** 删除关键词分组 POST /api/resource/deleteKeyGroup */
 export async function deleteKeyGroup(body: API.KeyGroupResultDelete, options?: { [p: number]: any }) {
   return request<API.BaseResponse<number>>('/api/resource/deleteKeyGroup', {
@@ -421,19 +459,57 @@ export async function deleteKeyGroup(body: API.KeyGroupResultDelete, options?: {
     ...(options || {}),
   });
 }
-
-
-/** 搜索关键词 GET /api/resource/searchKey */
-export async function searchKey(options?: { [key: string]: any }) {
-  return request<API.BaseResponse<API.keySearch[]>>('/api/resource/searchKey', {
-    method: 'GET',
+/** 删除术语分组 POST /api/comments/deleteComGroup */
+export async function deleteComGroup(body: API.ComGroupResultDelete, options?: { [p: number]: any }) {
+  return request<API.BaseResponse<number>>('/api/comments/deleteComGroup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
     ...(options || {}),
   });
 }
 
+
+
 /** 创建关键词 POST /api/resource/addKey */
 export async function addKey(body: API.keyCreate, options?: { [key: string]: any }) {
   return request<API.BaseResponse<String>>('/api/resource/addKey ', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+/** 创建关键词分组 POST /api/resource/addKeyGroup */
+export async function addKeyGroup(body: API.keyGroupCreate, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<String>>('/api/resource/addKeyGroup ', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 创建术语分组 POST /api/comments/addComGroup */
+export async function addComGroup(body: API.comGroupCreate, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<String>>('/api/comments/addComGroup ', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+/** 创建术语 POST /api/comments/addComments */
+export async function addComments(body: API.commentsCreate, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<String>>('/api/comments/addComments ', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -455,9 +531,75 @@ export async function editKey(body: API.editKeyParams, options?: { [key: string]
   });
 }
 
+/** 修改术语 POST /api/comments/editComments */
+export async function editComments(body: API.editCommentsParams, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<API.editCommentsResult>>('/api/comments/editComments', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** 删除关键词 POST /api/resource/deleteKey */
 export async function deleteKey(body: API.KeyResultDelete, options?: { [p: number]: any }) {
   return request<API.BaseResponse<number>>('/api/resource/deleteKey', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+/** 删除术语 POST /api/comments/deleteComments */
+export async function deleteComments(body: API.CommentsResultDelete, options?: { [p: number]: any }) {
+  return request<API.BaseResponse<number>>('/api/comments/deleteComments', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+
+/** 邮件发送 POST /api/email/send */
+export async function sendEmail(body: API.emailSendParams, options?: { [p: number]: any }) {
+  return request<API.BaseResponse<string>>('/api/email/send', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+/** 搜索邮件配置 GET /api/email/search */
+export async function searchEmail(options?: { [key: string]: any }) {
+  return request<API.BaseResponse<API.searchEmail[]>>('/api/email/search', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/** 增加邮件配置 GET /api/email/add */
+export async function addEmail(body: API.addEmail, options?: { [p: number]: any }) {
+  return request<API.BaseResponse<string>>('/api/email/add', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+/** 修改邮件配置 GET /api/email/edit */
+export async function editEmail(body: API.editEmail, options?: { [p: number]: any }) {
+  return request<API.BaseResponse<number>>('/api/email/edit', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -2,8 +2,8 @@ export const SYSTEM_LOGO = "https://lemon-1251938302.cos.ap-shanghai.myqcloud.co
 
 
 //prod环境
-export const PROD_WEBSOCKET = "ws://121.5.147.22:8080/api/ws/super"
-
+export const PROD_WEBSOCKET = "wss://backend.lemox.club/api/ws/super"
+export const PROD_Host = "https://backend.lemox.club"
 
 
 //dev环境

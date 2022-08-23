@@ -3,30 +3,16 @@
  * 更详细的 api 文档: https://github.com/umijs/umi-request
  */
 import {extend} from 'umi-request';
-import {message, notification} from 'antd';
-import {stringify} from "querystring";
-import {history} from 'umi'
+import {notification} from 'antd';
 
-/**
- * 异常处理程序
- */
-const errorHandler = (error: { response: Response }): Response => {
-  const {response} = error;
-  if (response && response.status) {
-
-  } else if (!response) {
-
-  }
-  return response;
-};
-
+import {PROD_Host} from "@/contants"
 /**
  * 配置request请求时的默认参数
  */
 const request = extend({
-  errorHandler, // 默认错误处理
+
   credentials: 'include', // 默认请求是否带上cookie
-  prefix:process.env.Node_ENV === "production" ? 'http://121.5.147.22/' : undefined //环境配置
+  prefix: process.env.NODE_ENV === "production" ? PROD_Host : undefined //环境配置
 });
 
 /**
@@ -66,23 +52,10 @@ request.interceptors.response.use(async (response, options): Promise<any> => {
   }
 
   const res = await response.clone().json();
-  if(res.code === 0){
-    return res.data;
-  }
-  if(res.code === 40100){
-    message.error("请先登录");
-    history.replace({
-      pathname:'/user/login',
-      search: stringify({
-        redirect: location.pathname,
-      })
-    });
-  }else{
-    console.log(res.description)
-    message.error(res.description);
-  }
 
-  return res.data;
+
+
+  return res;
 });
 
 export default request;

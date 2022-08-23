@@ -14,7 +14,7 @@ import { history } from 'umi';
 import Footer from '@/components/Footer';
 import {register} from '@/services/ant-design-pro/api';
 import styles from './index.less';
-import {SYSTEM_LOGO} from "@/contants";
+import {SYSTEM_LOGO,PROD_Host} from "@/contants";
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
@@ -54,16 +54,15 @@ const Register: React.FC = () => {
       }
 
     } catch (error: any) {
-      const defaultLoginFailureMessage = '注册失败，请重试！';
-      message.error(error.message ?? defaultLoginFailureMessage);
+      //const defaultLoginFailureMessage = '注册失败，请重试！';
+      //message.error(error.message ?? defaultLoginFailureMessage);
     }
   };
 
 
   function verifyClick() {
     const verify: any =  document.getElementById("verifyImg");
-    verify.src="http://localhost:8000/api/user/getVerify?"+ Math.random();
-
+    verify.src= process.env.NODE_ENV === "production" ?PROD_Host+"/api/user/getVerify?"+ Math.random() :"/api/user/getVerify?"+ Math.random();
   }
 
   return (
@@ -137,7 +136,7 @@ const Register: React.FC = () => {
                     },
                   ]}
                 />
-                <img id="verifyImg" onClick={verifyClick} className="ant-form-item-control-input-content" style={{height:"40px",marginTop:"-29px"}} src={"/api/user/getVerify?"+ Math.random()} alt=""/>
+                <img id="verifyImg" onClick={verifyClick} className="ant-form-item-control-input-content" style={{height:"40px",marginTop:"-29px"}} src={process.env.NODE_ENV === "production" ?PROD_Host+"/api/user/getVerify?"+ Math.random() :"/api/user/getVerify?"+ Math.random()} alt=""/>
               </Space>
               <ProFormText.Password
                 name="userPassword"

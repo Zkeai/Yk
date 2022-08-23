@@ -23,7 +23,7 @@ export const initialStateConfig = {
  *运行时配置
  */
 export const request: RequestConfig = {
-  timeout: 10000,
+  timeout: 10000000,
 };
 
 
@@ -33,9 +33,12 @@ export const request: RequestConfig = {
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
+  emailConfig?: API.searchEmail;
   loading?: boolean;
+  fetchEmailConfig?: () => Promise<API.searchEmail | undefined>;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
+  //获取userinfo
   const fetchUserInfo = async () => {
     try {
       const result = await queryCurrentUser();
@@ -45,8 +48,20 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
-  // 如果是无需登录的页面，不执行
 
+
+  // const fetchEmailConfig = async () => {
+  //   try {
+  //     const result = await searchEmail();
+  //     return JSON.parse(decrypt(result.data));
+  //   } catch (error) {
+  //     history.push(loginPath);
+  //   }
+  //   return undefined;
+  // };
+
+
+  // 如果是无需登录态的页面，不执行
   if (NO_NEED_LOGIN_WHITE_LIST.includes(history.location.pathname)) {
 
     return {
@@ -56,6 +71,7 @@ export async function getInitialState(): Promise<{
 
   }
   const currentUser = await fetchUserInfo();
+  //const emailConfig = await fetchEmailConfig();
   return {
     fetchUserInfo,
     currentUser,
@@ -122,9 +138,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
           //   <LinkOutlined />
           //   <span>OpenAPI 文档</span>
           // </Link>,
-          // <Link to="/~docs" key="docs">
-          //   <BookOutlined />
-          //   <span>业务组件文档</span>
           // </Link>,
         ]
       : [
@@ -148,7 +161,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
                 setInitialState((preInitialState) => ({
                   ...preInitialState,
                   settings,
-                }));
+                })).then(() => {});
               }}
             />
           )}

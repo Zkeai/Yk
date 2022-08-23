@@ -2,13 +2,13 @@ import {
   ProCard,
   ProForm,
   ProFormDateTimePicker,
-  ProFormDigit, ProFormRadio, ProFormText,
+  ProFormDigit, ProFormInstance, ProFormRadio, ProFormSelect, ProFormText,
   ProFormTextArea, ProFormTreeSelect,
   StepsForm,
 } from '@ant-design/pro-components';
 import {message, Modal,  Tag} from 'antd';
-import {addTask, searchDevicesList} from "@/services/ant-design-pro/api";
-import {useEffect, useState} from "react";
+import {addTask, searchComments, searchDevicesList} from "@/services/ant-design-pro/api";
+import {useEffect, useRef, useState} from "react";
 import {useModel} from "@@/plugin-model/useModel";
 import "../../ZH/components/index.less"
 import moment from "moment";
@@ -36,7 +36,24 @@ const phoneList = [
     ],
   },
 ]
+const options=[
+  {
+    value: '6',
+    label: '6%',
+  },
+  {
+    value: '12',
+    label: '12%',
+  },
+]
+
+
+
+
 export default (props: any) => {
+  const formRef = useRef<ProFormInstance>();
+
+
 
   useEffect(() => {
     ws = props.Ws
@@ -61,7 +78,11 @@ export default (props: any) => {
       createTime: ''
     }
   )
-
+  const handleSelect = (val: string) => {
+    formRef?.current?.setFieldsValue({
+      commentArea: val,
+    });
+  }
 
   const handleOk = () => {
     setIsModalVisible(false);
@@ -74,9 +95,9 @@ export default (props: any) => {
   return (
     <>
       <StepsForm
+        formRef={formRef}
         onFinish={async (values) => {
           const {time, selectPhone, note, ZxMs} = values
-          console.log(values);
           const scriptName = useScriptInfo.scriptName
           const scriptGroup = useScriptInfo.scriptGroup
           const sendTime = time
@@ -91,7 +112,8 @@ export default (props: any) => {
               type: "排队",
               createTime: createTime,
               scriptUrl: useScriptInfo.scriptUrl,
-              T_ID: values?.T_ID
+              T_ID: values?.T_ID,
+              commentArea:values?.commentArea,
             })
           }
           if (ZxMs === "定时") {
@@ -100,7 +122,8 @@ export default (props: any) => {
               sendTime: sendTime,
               createTime: createTime,
               scriptUrl: useScriptInfo.scriptUrl,
-              T_ID: values?.T_ID
+              T_ID: values?.T_ID,
+              commentArea:values?.commentArea,
             })
           }
 
@@ -137,7 +160,8 @@ export default (props: any) => {
                   type: "排队",
                   createTime: createTime,
                   scriptUrl: useScriptInfo.scriptUrl,
-                  T_ID: values?.T_ID
+                  T_ID: values?.T_ID,
+                  commentArea:values?.commentArea,
                 },
                 array: devices.split(",")
               })
@@ -154,7 +178,8 @@ export default (props: any) => {
                   createTime: createTime,
                   sendTime: sendTime,
                   scriptUrl: useScriptInfo.scriptUrl,
-                  T_ID: values?.T_ID
+                  T_ID: values?.T_ID,
+                  commentArea:values?.commentArea,
                 },
                 array: devices.split(",")
               })
@@ -204,7 +229,36 @@ export default (props: any) => {
             <ProForm.Group>
               <ProFormTextArea tooltip="作品ID" width="xl" name="T_ID" label="文章ID(一行一条)"/>
             </ProForm.Group>
+            {/*话术分组*/}
+            <ProForm.Group>
+              <ProFormSelect
 
+                options={options}
+                initialValue=""
+                width="sm"
+                name="comGroupSelect"
+                label="话术选择"
+                fieldProps={{
+                  onSelect:(val: any) => handleSelect(val),
+                }}
+                request={async () => {
+                  const {data} = await searchComments()
+                  options.length = 0
+                  data.forEach( item => {
+                    options.push({
+                      value: item.content,
+                      label: item.comGroup + "-" + item.keyWord,
+                    })
+                  })
+                  return options
+                }}
+              />
+
+            </ProForm.Group>
+            {/*话术内容*/}
+            <ProForm.Group>
+              <ProFormTextArea tooltip="话术内容" width="xl" name="commentArea" label="话术内容(一行一条)"/>
+            </ProForm.Group>
           </ProCard>
 
 
@@ -234,13 +288,11 @@ export default (props: any) => {
                 if (res[0] !== "") {
                   for (let i = 0; i < res.length; i++) {
                     const m = JSON.parse(res[i])
-                    console.log(m.deviceGroup)
                     if (m.deviceGroup === "" || m.deviceGroup === null || m.deviceGroup === undefined) {
                       m.deviceGroup = "默认分组"
                     }
 
                     phoneArray.push(m.deviceGroup)
-                    console.log(phoneArray)
                     newArray.push({
                       index: i + 1,
                       id: m.id,

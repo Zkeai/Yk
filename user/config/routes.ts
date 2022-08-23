@@ -28,20 +28,27 @@ export default [
     path: '/admin',
     name: '管理页',
     icon: 'crown',
-    access: 'canAdmin',
-    component: './Admin',
+
     routes: [
       {
         path: '/admin/user-manage',
         name: '用户管理',
         icon: 'RedditCircleFilled',
+        access: 'canAdmin',
         component: './Admin/UserManage',
       },
       {
         path: '/admin/script-manage',
         name: '脚本管理',
+        access: 'canAdmin',
         icon: 'CodeSandboxSquareFilled',
         component: './Admin/ScriptManage',
+      },
+      {
+        path: '/admin/web',
+        name: '网站管理',
+        icon: 'CodeSandboxSquareFilled',
+        component: './Admin/WebManage',
       },
       {
         component: './404',
@@ -190,15 +197,39 @@ export default [
         ]
       },
       {
+        name: '话术',
+        icon: 'ProfileFilled ',
+        path: 'comment',
+        routes: [
+          {
+            name: '话术分组',
+            icon: 'ProfileTwoTone',
+            path: 'comGroup',
+            component: './Resource/Comments/ComGroup.tsx',
+          },
+          {
+            name: '话术',
+            icon: 'ProjectTwoTone',
+            path: 'comments',
+            component: './Resource/Comments/Comments.tsx',
+          }
+        ]
+      },
+      {
         component: './404',
       },
     ],
   },
 
-
   {
     path: '/',
     redirect: './welcome',
+  },
+  {
+    path: 'log',
+    name: '日志',
+    icon: 'CalendarOutlined',
+    component: './Log/Log'
   },
   {
     component: './404',
