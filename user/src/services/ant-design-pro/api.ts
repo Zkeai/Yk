@@ -34,6 +34,19 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
   });
 }
 
+/** 增加登录历史 POST /api/history/add */
+export async function addHis(body: API.addHistory, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<String>>('/api/history/add ', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+
 /** 注册接口 POST /api/user/register    */
 export async function register(body: API.RegisterParams, options?: { [key: string]: any }) {
   return request<API.BaseResponse<API.RegisterResult>>('/api/user/register', {
@@ -586,7 +599,7 @@ export async function searchEmail(options?: { [key: string]: any }) {
   });
 }
 
-/** 增加邮件配置 GET /api/email/add */
+/** 增加邮件配置 POST /api/email/add */
 export async function addEmail(body: API.addEmail, options?: { [p: number]: any }) {
   return request<API.BaseResponse<string>>('/api/email/add', {
     method: 'POST',
@@ -597,7 +610,7 @@ export async function addEmail(body: API.addEmail, options?: { [p: number]: any 
     ...(options || {}),
   });
 }
-/** 修改邮件配置 GET /api/email/edit */
+/** 修改邮件配置 POST /api/email/edit */
 export async function editEmail(body: API.editEmail, options?: { [p: number]: any }) {
   return request<API.BaseResponse<number>>('/api/email/edit', {
     method: 'POST',
@@ -608,3 +621,14 @@ export async function editEmail(body: API.editEmail, options?: { [p: number]: an
     ...(options || {}),
   });
 }
+
+/** 搜索历史记录 GET /api/history/search */
+export async function searchHistory(options?: { [key: string]: any }) {
+  return request<API.BaseResponse<API.searchHis[]>>('/api/history/search', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+
+

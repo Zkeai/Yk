@@ -545,6 +545,19 @@ declare namespace API {
 
   }
 
+  /** searchHistory  搜索历史记录返回参数*/
+  type searchHis = {
+    userid: string;
+    ip: string;
+    address: string;
+    loginTime: Date;
+  }
+
+  /** addHistory  增加历史记录返回参数*/
+  type addHistory = {
+    ip?: string,
+    address?: string
+  };
 
 
   /**
@@ -591,3 +604,4 @@ declare namespace API {
     type?: NoticeIconItemType;
   };
 }
+

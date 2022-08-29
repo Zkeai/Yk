@@ -12,12 +12,10 @@ import {  ProFormCheckbox, ProFormText, LoginForm } from '@ant-design/pro-form';
 // @ts-ignore
 import {history, Link, useModel} from 'umi';
 import Footer from '@/components/Footer';
-import { login } from '@/services/ant-design-pro/api';
+import {addHis, login} from '@/services/ant-design-pro/api';
 import styles from './index.less';
 import {SYSTEM_LOGO} from "@/contants";
 //import {ws} from '@/utils/WebSocket'
-
-
 
 
 
@@ -46,6 +44,22 @@ const Login: React.FC = () => {
         // ws().onopen = function () {
         // }
 
+
+        //保存登录记录
+          fetch("https://ip.help.bj.cn/")
+          .then((res)=>res.json())
+          .then((res)=>{
+            const data = res.data[0]
+
+            const ip = data.ip
+            const address =data.nation+" "+data.province + data.city + data.district
+
+            const addHistory = async(ip_: string,address_: string)=>{
+             await addHis({ip: ip_,address: address_});
+
+            }
+            addHistory(ip,address)
+          })
 
 
 
