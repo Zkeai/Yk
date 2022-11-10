@@ -11,14 +11,14 @@ var utils_url ="https://lemon-1251938302.cos.ap-shanghai.myqcloud.com/script/uti
 var MD5_url ="https://cdn.lemox.club/Le/md5.js"
 var utils;
 var md5;
+var IntervalID;
 
 
+// var url ="http://192.168.10.6:8080/api/"
+// var ws_url ="ws://192.168.10.6:8080/api/ws/"
 
-//var url ="http://192.168.10.4:8080/api/"
-//var ws_url ="ws://192.168.10.4:8080/api/ws/"
-
-var url ="https://backend.lemox.club/api/"
-var ws_url ="wss://backend.lemox.club/api/ws/"
+var url ="https://backend.shuotian.vip/api/"
+var ws_url ="wss://backend.shuotian.vip/api/ws/"
 
 var notice ="仅用于自动化测试,不得用于其他用途。"
 
@@ -270,6 +270,7 @@ ui.emitter.on("options_item_selected", (e, item) => {
         case "退出":
             confirm('亲,确定要退出么?').then(clear=>{
                 if (clear){
+                    clearInterval(IntervalID)
                     utils.stop_autojs()
                 };
             })
@@ -439,7 +440,14 @@ function 主脚本(uuid,secret,software){
                     storage.put("uuid",uuid)
                     storage.put("remark",remark)
                     Ws = startWs();
-        
+                    IntervalID = setInterval(()=>{
+                        var msg = JSON.stringify({
+                            type: "isOnline"
+                        });
+                        Ws.send(msg)
+                    },50000)
+
+
                     ui.post(() => {
                         ui.保存.attr("visibility", "gone");
                         ui.card3.attr("h","80vh")
@@ -482,60 +490,68 @@ function 主脚本(uuid,secret,software){
         let response =false;
         try {
             let thread =threads.start(function(){
-                            //获取uuid
-                            var res = http.postJson(url+"user/getUserid", {
-                                "uuid": uuid,
-                            });
-                            var html = res.body.string();
-                            var html = JSON.parse(html);
-                            var userid = html.data;
-                        //获取机器码
-                        function 设备信息加密(){
+            //获取uuid
+            var res = http.postJson(url+"user/getUserid", {
+                "uuid": uuid,
+            });
+            var html = res.body.string();
+            var html = JSON.parse(html);
+            var userid = html.data;
+            
+        //获取机器码
+        function 设备信息加密(){
 
-                            return MD5.hex_md5(device.model,device.fingerprint,device.serial,device.getIMEI(),false,true)
-                        }
-                        var machine = 设备信息加密()
-                        //获取ip
-                        var res = http.get("http://ip.json-json.com/");
-                        var ip = res.body.string();
+            return MD5.hex_md5(device.model,device.fingerprint,device.serial,device.getIMEI(),false,true)
+        }
+        var machine = 设备信息加密()
+        //获取ip
+        var res = http.get("http://ip.json-json.com/");
+        var ip = res.body.string();
 
 
-                        //use
-                            var res = http.postJson(url+"kami/useKami", {
-                                "userid": userid,
-                                "software": software,
-                                "kami": secret,
-                                "machine": machine,
-                                "ip": ip
-                            });
-                            var html = res.body.string();
-                            var html = JSON.parse(html);
-                            code =html.code
-                            data = html.data;
-                            description=html.description
-                        })
-                        thread.join()
-                            if(code == 40000){
-                                toastLog(description)
-                            }
-                            else if(code == 50000){
-                                toastLog(description)
-                            }
-                            else if(code == 0){
-                                if(compare(data)){
-                                    storage.put("uuid",uuid)
-                                    storage.put("remark",remark)
-                                    storage.put("secret",secret)
-                                    storage.put("software",software)
-                                    ui.post(() => {
-                                        ui.保存.attr("visibility", "gone");
-                                        ui.card3.attr("h","145vh")
-                                    }, 1000);
-                                    response = true
-                                }else{
-                                    toastLog("卡密过期")               
-                                }
-                            }
+        //use
+            var res = http.postJson(url+"kami/useKami", {
+                "userid": userid,
+                "software": software,
+                "kami": secret,
+                "machine": machine,
+                "ip": ip
+            });
+            var html = res.body.string();
+            var html = JSON.parse(html);
+            code =html.code
+            data = html.data;
+            description=html.description
+        })
+        thread.join()
+            if(code == 40000){
+                toastLog(description)
+            }
+            else if(code == 50000){
+                toastLog(description)
+            }
+            else if(code == 0){
+                Ws = startWs();
+                if(compare(data)){
+                    storage.put("uuid",uuid)
+                    storage.put("remark",remark)
+                    storage.put("secret",secret)
+                    storage.put("software",software)
+                    ui.post(() => {
+                        ui.保存.attr("visibility", "gone");
+                        ui.card3.attr("h","145vh")
+                    }, 1000);
+                    IntervalID = setInterval(()=>{
+                        var msg = JSON.stringify({
+                            type: "isOnline"
+                        });
+                        Ws.send(msg)
+                    },50000)
+                    response = true
+                }else{
+                    toastLog("卡密过期")               
+                }
+            }
 
 
 
@@ -804,7 +820,22 @@ function 运行脚本(msg,filename){
                     评论内容:D_PlLy
             })
             break;
+
             case "知乎文章评论.js":
+                function exec_zhcs(action, args){
+                    args = args || {};
+                    console.log("运行脚本:"+filename)
+                     engineScript = engines.execScript(action.name, action.name + "(" + JSON.stringify(args) + ");\n" + action.toString());
+                     files.remove("/sdcard/Le/main/"+filename)
+                   }
+                   exec_zhcs(script.main, {
+                    createTime:msg.createTime,
+                    ID:msg.T_ID,
+                    commentArea:msg.commentArea,
+            })
+            break;
+
+            case "小红书私信.js":
                 function exec_zhcs(action, args){
                     args = args || {};
                     console.log("运行脚本:"+filename)
