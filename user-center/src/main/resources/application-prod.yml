@@ -7,7 +7,7 @@ spring:
   # DataSource Config
   datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://121.5.147.22:3306/lemon
+      url: jdbc:mysql://106.15.126.44:3306/lemon
       username: lemon
       password: lemon666
   #session失效时间
@@ -16,7 +16,7 @@ spring:
   #rabbitmq配置
   rabbitmq:
     virtual-host: /yk
-    host: 121.5.147.22
+    host: 106.15.126.44
     port: 5672
     username: admin
     password: 123

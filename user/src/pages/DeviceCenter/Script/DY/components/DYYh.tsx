@@ -10,7 +10,7 @@ import {message, Modal, Space, Tag} from 'antd';
 import {addTask, searchDevicesList} from "@/services/ant-design-pro/api";
 import {useEffect, useState} from "react";
 import {useModel} from "@@/plugin-model/useModel";
-import "../../ZH/components/index.less"
+import "../../index.less"
 import moment from "moment";
 import {decrypt} from "@/utils/aes";
 
@@ -76,7 +76,7 @@ export default (props: any) => {
       <StepsForm
         onFinish={async (values) => {
           const {time, selectPhone, note, ZxMs} = values
-          console.log(values);
+
           const scriptName = useScriptInfo.scriptName
           const scriptGroup = useScriptInfo.scriptGroup
           const sendTime = time
@@ -246,6 +246,7 @@ export default (props: any) => {
                 },
                 array: devices.split(",")
               })
+              console.log(ws)
               ws.send(msg_)
 
 
@@ -408,13 +409,13 @@ export default (props: any) => {
                 if (res[0] !== "") {
                   for (let i = 0; i < res.length; i++) {
                     const m = JSON.parse(res[i])
-                    console.log(m.deviceGroup)
+
                     if (m.deviceGroup === "" || m.deviceGroup === null || m.deviceGroup === undefined) {
                       m.deviceGroup = "默认分组"
                     }
 
                     phoneArray.push(m.deviceGroup)
-                    console.log(phoneArray)
+
                     newArray.push({
                       index: i + 1,
                       id: m.id,

@@ -10,7 +10,7 @@ import {message, Modal,  Tag} from 'antd';
 import {addTask, searchDevicesList} from "@/services/ant-design-pro/api";
 import {useEffect, useState} from "react";
 import {useModel} from "@@/plugin-model/useModel";
-import "../../ZH/components/index.less"
+import "../../index.less"
 import moment from "moment";
 import {decrypt} from "@/utils/aes";
 

@@ -227,7 +227,7 @@ export default (props: any) => {
 
             {/*浏览ID*/}
             <ProForm.Group>
-              <ProFormTextArea tooltip="作品ID" width="xl" name="T_ID" label="文章ID(一行一条)"/>
+              <ProFormTextArea tooltip="用户ID" width="xl" name="T_ID" label="用户ID(一行一条)"/>
             </ProForm.Group>
             {/*话术分组*/}
             <ProForm.Group>
@@ -237,7 +237,7 @@ export default (props: any) => {
                 initialValue=""
                 width="sm"
                 name="comGroupSelect"
-                label="话术选择"
+                label="私信分组选择"
                 fieldProps={{
                   onSelect:(val: any) => handleSelect(val),
                 }}
@@ -246,6 +246,7 @@ export default (props: any) => {
                   const res =decrypt(data).split(";")
                   options.length = 0
                   if(res[0] !== ""){
+
                     for(let i = 0 ;i < res.length;i++){
                       const m = JSON.parse(res[i])
 
@@ -254,7 +255,6 @@ export default (props: any) => {
                         label: m.comGroup + "-" + m.keyWord,
                       })
                     }
-
 
                   }
 
@@ -265,7 +265,7 @@ export default (props: any) => {
             </ProForm.Group>
             {/*话术内容*/}
             <ProForm.Group>
-              <ProFormTextArea tooltip="话术内容" width="xl" name="commentArea" label="话术内容(一行一条)"/>
+              <ProFormTextArea tooltip="私信内容" width="xl" name="commentArea" label="私信内容(一行一条)"/>
             </ProForm.Group>
           </ProCard>
 

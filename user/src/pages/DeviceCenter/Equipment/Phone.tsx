@@ -20,6 +20,8 @@ const { Option } = Select;
 
 
 const Phone = () => {
+
+
   const [deviceListData,setDeviceListDate]=useState()
   const [refreshKey, setRefreshKey] = useState(100);
   const [hasLoading,setLoading] =useState(true)
@@ -40,26 +42,32 @@ const Phone = () => {
   const group: any=[]
   const selectedArray: any =[]
   const [groupList,setGroupList]=useState([])
-
+  const websocket = ws()
 let groupValue ="";
 
 
 
 useEffect(()=>{
-  ws().onmessage= async (e: any)=>{
+  websocket.onmessage= async (e: any)=>{
     if(e.data === "设备上线"){
 
-      const a =refreshKey+1
-
+      const a = refreshKey + 1
         setRefreshKey(a)
+
 
 
     }
     if(e.data === "设备下线"){
-      const a =refreshKey-1
+      const a = refreshKey - 1
       setRefreshKey(a)
 
+      // clearInterval(IntervalId)
+      // ChangeIntervalId(0)
+      // console.log("IntervalId:"+IntervalId)
+      // sessionStorage.removeItem("socket")
     }
+
+
   }
 },[])
 

@@ -6,16 +6,15 @@ import {
 } from '@ant-design/pro-components';
 import {Button, Modal, Space, Tag,} from 'antd';
 import {useEffect, useRef, useState} from 'react';
-
 import { searchScript} from "@/services/ant-design-pro/api";
 import {PlusOutlined} from "@ant-design/icons";
-import DYYh from "@/pages/DeviceCenter/Script/DY/components/DYYh";
-import DYUidGz from "@/pages/DeviceCenter/Script/DY/components/DYUidGz";
-import DYLh from "@/pages/DeviceCenter/Script/DY/components/DYLh";
+
 import { useModel } from 'umi';
 import {ws} from '@/utils/WebSocket'
 import {decrypt} from "@/utils/aes";
 import moment from "moment";
+import XHScs from "@/pages/DeviceCenter/Script/XHS/components/XHSsx";
+import ZHyh from "@/pages/DeviceCenter/Script/ZH/components/ZHyh";
 
 const filtersArray: any =[{}];
 
@@ -24,13 +23,10 @@ const newArray: any[] = []
 
 let websocket: any;
 export default () => {
-useEffect(()=>{
+  useEffect(()=>{
 
-  websocket =ws()
-
-},[])
-
-
+    websocket =ws()
+  },[])
   const [scriptRw, setScriptRw] = useState();
   const actionRef = useRef<ActionType>();
   const {useModalVisible,setUseModalVisible,setUseScriptInfo} =useModel("useScriptModel",(model: any)=> ({
@@ -55,7 +51,7 @@ useEffect(()=>{
     })
     showModal()
     setScriptRw(record.scriptName)
-}
+  }
 
 
   const columns: ProColumns<API.ScriptsItem>[] = [
@@ -170,7 +166,7 @@ useEffect(()=>{
             for(let i = 0 ;i < res.length;i++){
 
               const m = JSON.parse(res[i])
-              if(m.scriptGroup ==="抖音组"){
+              if(m.scriptGroup ==="小红书组"){
                 //filter处理
                 filtersNewArray.push(m.scriptGroup)
 
@@ -239,11 +235,13 @@ useEffect(()=>{
 
       <Modal title={scriptRw}  width={1000}  visible={useModalVisible} footer={null}  onCancel={handleCancel}>
 
+
+
         {
-          //todo
-          scriptRw =="DY养号"
-          ? <DYYh Ws={websocket}/> :(scriptRw =="DY脚本")
-          ? <DYUidGz />:<DYLh/>
+          //todo  需要判断加载的组件
+
+          scriptRw =="XHS私信"
+            ? <XHScs Ws={websocket}/> :<ZHyh Ws={websocket}/>
 
         }
 

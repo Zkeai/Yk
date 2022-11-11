@@ -174,11 +174,11 @@ public class WsController {
                             sendOneMessage("super","设备上线");
 
                         }
-
-
-
                     break;
-
+                case "isOnline":
+                    JSONObject msg = new JSONObject();
+                    msg.put("type","isHeart");
+                    sendOneMessage(uid,msg.toString());
             }
         }else{
 
@@ -187,8 +187,12 @@ public class WsController {
                 case "排队":
                     sendQueueMessage(jsonObject);
                     break;
+                case "isOnline":
+                    sendOneMessage("super","online_is");
+                    break;
 
                 case "定时":
+                    System.out.println("定时任务");
                     String createTime =jsonObject.getJSONObject("msg").getString("createTime");
                     String sendTime =jsonObject.getJSONObject("msg").getString("sendTime");
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

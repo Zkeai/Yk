@@ -147,6 +147,12 @@ export default [
             component: './DeviceCenter/Script/ZH',
           },
           {
+            name: 'XHS系列',
+            icon: 'InstagramFilled',
+            path: 'XHS',
+            component: './DeviceCenter/Script/XHS',
+          },
+          {
             component: './404',
           },
         ],
@@ -226,8 +232,14 @@ export default [
     redirect: './welcome',
   },
   {
+    path: 'issue',
+    name: '常见问题',
+    icon: 'InfoCircleOutlined',
+    component: './Issue/Issue'
+  },
+  {
     path: 'log',
-    name: '日志',
+    name: '访问日志',
     icon: 'CalendarOutlined',
     component: './Log/Log'
   },

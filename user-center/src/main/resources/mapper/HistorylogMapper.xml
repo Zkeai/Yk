@@ -5,14 +5,16 @@
 <mapper namespace="com.lemon.usercenter.mapper.HistorylogMapper">
 
     <resultMap id="BaseResultMap" type="com.lemon.usercenter.model.domain.Historylog">
+            <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="userid" column="userid" jdbcType="VARCHAR"/>
             <result property="ip" column="ip" jdbcType="VARCHAR"/>
             <result property="address" column="address" jdbcType="VARCHAR"/>
             <result property="loginTime" column="loginTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        userid,ip,address,
-        loginTime
+        id,userid,ip,
+        address,loginTime,isDelete
     </sql>
 </mapper>

@@ -51,6 +51,7 @@ public class MessageListener {
                 boolean isOfflineTask = map.containsKey("offline");
                 //3.设备在线  判断有没有正在执行的任务-
                 if(deviceStatus == 0){
+
                     //有没有执行任务
                     QueryWrapper<Tasks> queryWrapper1 = new QueryWrapper<>();
                     queryWrapper1.eq("devices",device).eq("status",1);

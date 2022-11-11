@@ -14,17 +14,24 @@ import {history, Link, useModel} from 'umi';
 import Footer from '@/components/Footer';
 import {addHis, login} from '@/services/ant-design-pro/api';
 import styles from './index.less';
-import {SYSTEM_LOGO} from "@/contants";
+import { SYSTEM_LOGO} from "@/contants";
 //import {ws} from '@/utils/WebSocket'
 
 
 
 const Login: React.FC = () => {
+  // const websocket = ws;
+  // const Websocket = websocket()
+
   //const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
 
-
+  // const {IntervalId,ChangeIntervalId} =useModel("useSocketModel",(model: any)=> ({
+  //   IntervalId: model.IntervalId,
+  //   ChangeIntervalId:model.ChangeIntervalId,
+  //
+  // }))
 
 
   const fetchUserInfo = async () => {
@@ -35,14 +42,50 @@ const Login: React.FC = () => {
     }
   };
 
+
+
   const handleSubmit = async (values: API.LoginParams) => {
     try {
       // 登录
       const user = await login({ ...values, type });
       if (user.code === 0) {
 
-        // ws().onopen = function () {
+        // const getSocket = ()=>{
+        //
+        //   //判断sessionStorage有没有数据
+        //   if( sessionStorage.getItem("socket") === null){
+        //     if(IntervalId === 0 ){
+        //
+        //       const id= setInterval(()=>{
+        //         console.log(websocket().readyState)
+        //         if(Websocket.readyState === 1){
+        //           const msg_ = JSON.stringify({
+        //             type: "isOnline",
+        //           })
+        //           console.log("心跳")
+        //           Websocket.send(msg_)
+        //         }
+        //
+        //       },5000)
+        //       ChangeIntervalId(id)
+        //       sessionStorage.setItem("socket",String(id))
+        //     }
+        //   }
+        //
+        //
         // }
+
+
+        // Websocket.onopen=function (){
+        //   console.log("ws连接成功")
+        //   console.log(Websocket.readyState)
+        //   getSocket()
+        //
+        // }
+
+
+
+
 
 
         //保存登录记录

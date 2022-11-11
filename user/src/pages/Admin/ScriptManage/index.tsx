@@ -343,6 +343,10 @@ export default () => {
                 value: '知乎组',
                 label: '知乎组',
               },
+              {
+                value: '小红书组',
+                label: '小红书组',
+              },
             ]}
             width="xs"
             name="group"
