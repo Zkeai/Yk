@@ -560,6 +560,31 @@ declare namespace API {
   };
 
 
+
+  /** hot  热更新文件*/
+  type hotList = {
+    id: number,
+    url: string,
+    version: string,
+    content: string
+
+  };
+
+  /** hotCreate  创建热更新文件提交参数*/
+  type hotCreate = {
+    url:string,
+  }
+
+  /** editHot  修改热更新文件提交参数*/
+  type editHot = {
+    id:number;
+    url:string
+
+  }
+
+
+
+
   /**
    * pro自带
    */

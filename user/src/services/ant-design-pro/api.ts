@@ -631,4 +631,34 @@ export async function searchHistory(options?: { [key: string]: any }) {
 }
 
 
+/** 搜索热更新文件 GET /api/hot/search */
+export async function searchHot(options?: { [key: string]: any }) {
+  return request<API.BaseResponse<API.hotList[]>>('/api/hot/search', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
 
+/** 创建热更新文件 POST /api/hot/add */
+export async function addHot(body: API.hotCreate, options?: { [key: string]: any }) {
+  return request<API.BaseResponse<String>>('/api/hot/add ', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 修改热更新文件 POST /api/hot/edit */
+export async function editHot(body: API.editHot, options?: { [p: number]: any }) {
+  return request<API.BaseResponse<number>>('/api/hot/edit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}

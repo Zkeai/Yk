@@ -45,7 +45,7 @@ public class HistoryController {
         String userid = user.getUserAccount();
 
         QueryWrapper<Historylog> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("userid",userid).orderByDesc("loginTime");
+        queryWrapper.eq("userid",userid).orderByDesc("loginTime").last("limit 20");
 
         List<Historylog> historyLogsList = historylogService.list(queryWrapper);
 

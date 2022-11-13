@@ -44,11 +44,19 @@ export default [
         icon: 'CodeSandboxSquareFilled',
         component: './Admin/ScriptManage',
       },
+
       {
         path: '/admin/web',
         name: '网站管理',
-        icon: 'CodeSandboxSquareFilled',
+        icon: 'AppstoreFilled',
         component: './Admin/WebManage',
+      },
+      {
+        path: '/admin/hot',
+        name: '热更新',
+        access: 'canAdmin',
+        icon: 'CiCircleFilled',
+        component: './Admin/HotManage',
       },
       {
         component: './404',
