@@ -2,9 +2,30 @@
  * @Author: L.柠
  * @Date: 2022-11-13 12:22:22
  */
-
+"ui";
 var Url ="https://backend.shuotian.vip/api/"
 var 主文件路径 = "/sdcard/Le/main/"
+var h = device.height
+
+
+
+
+ui.layout(
+ <vertical>
+    <text id="myText" gravity="center"  h={h*0.1}  bg="#ffffff" w="*"  line="1"/>
+    <webview id="wv"  h={h*0.9} w="*"  />  
+ </vertical>
+    
+)
+
+ui.wv.loadUrl("file://" + files.path("res/bg.html"))
+
+
+setTimeout(()=>{
+  ui.myText.attr("color", "#aa4ff8");
+  ui.myText.setText("检测更新...");
+  
+},100)
 
 init()
 function init(){
@@ -12,7 +33,10 @@ function init(){
 }
 
 
-
+setTimeout(()=>{
+  ui.myText.attr("color", "#1976d2");
+  ui.myText.setText("初始化完成...");
+},2000)
 
 let res = http.get(Url+"hot/search")
 
@@ -20,9 +44,20 @@ jsonObj =JSON.parse(res.body.string())
 
 url=jsonObj.data[0].url
 
-downloadFile(url,"start.js",主文件路径)
+threads.start(function(){
+  downloadFile(url,"start.js",主文件路径)
+})
 
-engines.execScriptFile(主文件路径+"start.js");
+setTimeout(()=>{
+  ui.myText.attr("color", "#e06c75");
+  ui.myText.setText("加载主文件...");
+},5000)
+
+setTimeout(()=>{
+  engines.execScriptFile(主文件路径+"start.js");
+  $ui.finish()
+},8000)
+
 
 /** 下载文件到本地*/
 function downloadFile(url,fileName,path){
