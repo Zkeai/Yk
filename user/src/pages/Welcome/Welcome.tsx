@@ -3,8 +3,8 @@ import {LeftOutlined, RightOutlined} from "@ant-design/icons";
 import "./Welcome.less"
 import Abstract from "@/pages/Welcome/components/Abstract";
 import Interface from "@/pages/Welcome/components/Interface";
-import {useState} from "react";
-const contentStyle = {
+import { useState} from "react";
+const contentStyle: any = {
   height: '89.4vh',
   color: '#fff',
   lineHeight: '160px',
@@ -17,6 +17,7 @@ const App = () => {
   const handleOk = () => {
     setIsModalVisible(false);
   };
+
 
 
   return (

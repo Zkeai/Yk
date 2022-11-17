@@ -4,7 +4,7 @@ import type {RunTimeLayoutConfig} from 'umi';
 import {history, Link, RequestConfig} from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import {currentUser as queryCurrentUser} from './services/ant-design-pro/api';
+import {currentUser as queryCurrentUser, currentWebConfig} from './services/ant-design-pro/api';
 import defaultSettings from '../config/defaultSettings';
 import {decrypt} from "@/utils/aes";
 const isDev = process.env.NODE_ENV === 'development';
@@ -34,10 +34,23 @@ export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
   emailConfig?: API.searchEmail;
+  webConfig?: API.searchWebConfig;
   loading?: boolean;
   fetchEmailConfig?: () => Promise<API.searchEmail | undefined>;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchWebConfig?: () => Promise<API.searchWebConfig | undefined>
 }> {
+  //获取webConfig
+  const fetchWebConfig = async () => {
+    try {
+      const result = await currentWebConfig();
+      return JSON.parse(decrypt(result.data));
+    } catch (error) {
+      history.push(loginPath);
+    }
+    return undefined;
+  };
+
   //获取userinfo
   const fetchUserInfo = async () => {
     try {
@@ -48,8 +61,6 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
-
-
   // const fetchEmailConfig = async () => {
   //   try {
   //     const result = await searchEmail();
@@ -66,14 +77,18 @@ export async function getInitialState(): Promise<{
 
     return {
       fetchUserInfo,
+      fetchWebConfig,
       settings: defaultSettings,
     };
 
   }
   const currentUser = await fetchUserInfo();
   //const emailConfig = await fetchEmailConfig();
+  const webConfig = await fetchWebConfig();
   return {
     fetchUserInfo,
+    fetchWebConfig,
+    webConfig,
     currentUser,
     settings: defaultSettings,
   };

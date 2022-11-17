@@ -662,3 +662,24 @@ export async function editHot(body: API.editHot, options?: { [p: number]: any })
     ...(options || {}),
   });
 }
+
+
+/** 获取网站配置 GET /api/webConfig/search */
+export async function currentWebConfig(options?: { [key: string]: any }) {
+  return request<API.BaseResponse<API.searchWebConfig>>('/api/webConfig/search', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/** 配置网站配置  POST /api/webConfig/edit */
+export async function editWebConfig(body: API.WebConfigParams, options?: { [p: number]: any }) {
+  return request<API.BaseResponse<number>>('/api/webConfig/edit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}

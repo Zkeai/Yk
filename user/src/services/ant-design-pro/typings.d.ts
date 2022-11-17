@@ -582,6 +582,42 @@ declare namespace API {
 
   }
 
+  /** searchWebConfig  搜索网站配置返回参数*/
+  type searchWebConfig = {
+    id:number,
+    web_title: string,
+    icon_url:string,
+    le_url:string,
+    api_url:string,
+    utils_url:string
+
+  }
+
+  /** WebConfigParams  网站配置提交参数*/
+  type WebConfigParams = {
+    web_title: string,
+    icon_url:string,
+    le_url:string,
+    api_url:string,
+    utils_url:string
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

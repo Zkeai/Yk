@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon.usercenter.mapper.WebMapper">
+
+    <resultMap id="BaseResultMap" type="com.lemon.usercenter.model.domain.Web">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="web_title" column="web_title" jdbcType="VARCHAR"/>
+            <result property="icon_url" column="icon_url" jdbcType="VARCHAR"/>
+            <result property="le_url" column="le_url" jdbcType="VARCHAR"/>
+            <result property="api_url" column="api_url" jdbcType="VARCHAR"/>
+            <result property="utils_url" column="utils_url" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,web_title,icon_url,
+        le_url,api_url,utils_url
+    </sql>
+</mapper>
