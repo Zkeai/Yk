@@ -18,7 +18,7 @@ import '../ChangeInfo/index.less'
 // @ts-ignore
 import { useModel } from 'umi';
 import {userinfoEdit} from "@/services/ant-design-pro/api";
-import {Host} from "@/contants";
+import {Host, PROD_Host} from "@/contants";
 
 
 
@@ -167,10 +167,10 @@ const App = () => {
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={false}
-        action={Host+"/api/user/txCos"}
+        action={process.env.NODE_ENV === "production" ? PROD_Host + "/api/user/txCos"  : Host + "/api/user/txCos"}
         data={file=>({
-          IMG_Raw:file,
-          IMG_Name:file.name,
+          Raw:file,
+          Name:file.name,
           path:'userCenterAvatar'
         })}
         beforeUpload={beforeUpload}

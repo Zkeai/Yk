@@ -2,13 +2,17 @@ import {Button, Form, Input, message, Space} from "antd";
 import {FireTwoTone} from "@ant-design/icons";
 import {useModel} from "@@/plugin-model/useModel";
 import {editWebConfig} from "@/services/ant-design-pro/api";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 function Index(){
 
 
   const { initialState } = useModel('@@initialState');
   const [key,setKey] = useState(0)
+  useEffect(()=>{
+    setKey(key+1)
+  },[])
+
   const onFinish =async (values: any) => {
      const res = await editWebConfig(values);
     if(res.code === 0){

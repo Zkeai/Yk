@@ -191,9 +191,10 @@ export default [
     name: '资源管理',
     icon: 'BarsOutlined',
     routes: [
+
       {
         name: '词库',
-        icon: 'ProfileFilled ',
+        icon: 'ProfileFilled',
         path: 'release',
         routes: [
           {
@@ -203,31 +204,50 @@ export default [
             component: './Resource/Key/KeyGroup',
           },
           {
-            name: '词库',
+            name: '词库列表',
             icon: 'ProjectTwoTone',
             path: 'keyWord',
             component: './Resource/Key/KeyWord',
-          }
+          },
+
         ]
       },
       {
         name: '话术',
-        icon: 'ProfileFilled ',
+        icon: 'ProfileFilled',
         path: 'comment',
         routes: [
           {
             name: '话术分组',
-            icon: 'ProfileTwoTone',
+            icon: 'FileTextTwoTone',
             path: 'comGroup',
             component: './Resource/Comments/ComGroup.tsx',
           },
           {
-            name: '话术',
-            icon: 'ProjectTwoTone',
+            name: '话术列表',
+            icon: 'FileWordTwoTone',
             path: 'comments',
             component: './Resource/Comments/Comments.tsx',
           }
         ]
+      },
+      {
+        name: '图片',
+        icon: 'ProfileFilled',
+        path: 'img',
+        routes: [
+          {
+            name: '图片素材',
+            icon: 'PictureTwoTone',
+            path: 'comments',
+            component: './Resource/Img/ImgList.tsx',
+          }
+        ]
+      },
+      {
+        name: '对象存储配置',
+        path: 'cos',
+        component: './Resource/COS',
       },
       {
         component: './404',

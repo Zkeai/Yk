@@ -4,7 +4,7 @@ import type {RunTimeLayoutConfig} from 'umi';
 import {history, Link, RequestConfig} from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import {currentUser as queryCurrentUser, currentWebConfig} from './services/ant-design-pro/api';
+import {currentCosConfig, currentUser as queryCurrentUser, currentWebConfig} from './services/ant-design-pro/api';
 import defaultSettings from '../config/defaultSettings';
 import {decrypt} from "@/utils/aes";
 const isDev = process.env.NODE_ENV === 'development';
@@ -35,10 +35,12 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   emailConfig?: API.searchEmail;
   webConfig?: API.searchWebConfig;
-  loading?: boolean;
+  cosConfig?: API.searchCosConfig;
   fetchEmailConfig?: () => Promise<API.searchEmail | undefined>;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
-  fetchWebConfig?: () => Promise<API.searchWebConfig | undefined>
+  fetchWebConfig?: () => Promise<API.searchWebConfig | undefined>;
+  fetchCosConfig?: () => Promise<API.searchCosConfig | undefined>;
+  loading?: boolean;
 }> {
   //获取webConfig
   const fetchWebConfig = async () => {
@@ -46,11 +48,20 @@ export async function getInitialState(): Promise<{
       const result = await currentWebConfig();
       return JSON.parse(decrypt(result.data));
     } catch (error) {
-      history.push(loginPath);
+      return undefined
     }
-    return undefined;
   };
+  //获取腾讯云COS Config
+  const fetchCosConfig = async () => {
+    try {
+      const result = await currentCosConfig();
+      return JSON.parse(decrypt(result.data));
 
+    } catch (error) {
+      return undefined;
+    }
+
+  };
   //获取userinfo
   const fetchUserInfo = async () => {
     try {
@@ -61,6 +72,8 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
+
+
   // const fetchEmailConfig = async () => {
   //   try {
   //     const result = await searchEmail();
@@ -71,6 +84,12 @@ export async function getInitialState(): Promise<{
   //   return undefined;
   // };
 
+  const currentUser = await fetchUserInfo();
+
+  //const emailConfig = await fetchEmailConfig();
+  const webConfig = await fetchWebConfig();
+  const cosConfig = await fetchCosConfig();
+
 
   // 如果是无需登录态的页面，不执行
   if (NO_NEED_LOGIN_WHITE_LIST.includes(history.location.pathname)) {
@@ -78,18 +97,19 @@ export async function getInitialState(): Promise<{
     return {
       fetchUserInfo,
       fetchWebConfig,
+      fetchCosConfig,
       settings: defaultSettings,
     };
 
   }
-  const currentUser = await fetchUserInfo();
-  //const emailConfig = await fetchEmailConfig();
-  const webConfig = await fetchWebConfig();
+
   return {
     fetchUserInfo,
     fetchWebConfig,
+    fetchCosConfig,
     webConfig,
     currentUser,
+    cosConfig,
     settings: defaultSettings,
   };
 }

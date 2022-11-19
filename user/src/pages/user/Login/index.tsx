@@ -41,6 +41,20 @@ const Login: React.FC = () => {
       await setInitialState((s: any) => ({ ...s, currentUser: userInfo }));
     }
   };
+  const fetchWebConfig = async () => {
+    const webConfig = await initialState?.fetchWebConfig?.();
+
+    if (webConfig) {
+      await setInitialState((s: any) => ({ ...s, webConfig: webConfig }));
+    }
+  };
+  const fetchCosConfig = async () => {
+    const cosConfig = await initialState?.fetchCosConfig?.();
+
+    if (cosConfig) {
+      await setInitialState((s: any) => ({ ...s, cosConfig: cosConfig }));
+    }
+  };
 
 
 
@@ -75,17 +89,12 @@ const Login: React.FC = () => {
         //
         // }
 
-
         // Websocket.onopen=function (){
         //   console.log("ws连接成功")
         //   console.log(Websocket.readyState)
         //   getSocket()
         //
         // }
-
-
-
-
 
 
         //保存登录记录
@@ -109,6 +118,8 @@ const Login: React.FC = () => {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
+        await fetchWebConfig();
+        await fetchCosConfig();
         /** 此方法会跳转到 redirect 参数所在的位置 */
 
         if (!history) return;

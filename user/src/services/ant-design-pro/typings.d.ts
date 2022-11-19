@@ -504,6 +504,40 @@ declare namespace API {
     id:number,
     keyWord:string
   };
+
+  /** ImgReposed  图片返回参数*/
+  type ImgReposed = {
+    url:string;
+    title:string;
+    size: number;
+    key:string;
+    secret_id:string ;
+    secret_key:string ;
+    buketName: string ;
+    region:string;
+
+  };
+
+
+  /** ImgReposed  Cos查询指定文件夹提交参数*/
+  type ImgParams = {
+    buketName: string ;
+    prefix:string;
+    secret_id:string ;
+    secret_key:string ;
+    region:string
+
+  };
+  /** ImgDeleteReposed  Cos删除指定文件提交参数*/
+  type ImgDeleteReposed = {
+    buketName: string ;
+    key:string;
+    secret_id:string ;
+    secret_key:string ;
+    region:string
+
+  };
+
   /** emailSendParams  发送邮件提交参数*/
   type emailSendParams = {
     type: string,
@@ -604,7 +638,27 @@ declare namespace API {
   }
 
 
+  /** CosConfigParams  腾讯云COS配置提交参数*/
+  type CosConfigParams = {
+    id: number
+    tx_secret_id: string,
+    tx_secret_key:string,
+    tx_region:string,
+    tx_url:string,
+    tx_buket_name:string
 
+  }
+
+  /** searchCosConfig  搜索腾讯云COS配置返回参数*/
+  type searchCosConfig = {
+    id:number,
+    tx_secret_id: string,
+    tx_secret_key:string,
+    tx_region:string,
+    tx_url:string,
+    tx_buket_name:string
+
+  }
 
 
 

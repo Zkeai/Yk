@@ -579,6 +579,54 @@ export async function deleteComments(body: API.CommentsResultDelete, options?: {
   });
 }
 
+//todo 腾讯云COS
+
+/** 获取COS指定文件夹列表  POST /api/cos/fileList */
+export async function getCosFileList(body: API.ImgParams, options?: { [p: number]: any }) {
+  return request<API.BaseResponse<any>>('/api/cos/fileList', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+/** 配置腾讯云COS配置  POST /api/cos/edit */
+export async function editCosConfig(body: API.CosConfigParams, options?: { [p: number]: any }) {
+  return request<API.BaseResponse<number>>('/api/cos/edit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+
+/** 获取腾讯云COS配置 GET /api/cos/search */
+export async function currentCosConfig(options?: { [key: string]: any }) {
+  return request<API.BaseResponse<API.searchCosConfig>>('/api/cos/search', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/** 删除COS指定文件  POST /api/cos/deleteFile */
+export async function deleteFile(body: API.ImgDeleteReposed, options?: { [p: number]: any }) {
+  return request<API.BaseResponse<boolean>>('/api/cos/deleteFile', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+
+
 
 /** 邮件发送 POST /api/email/send */
 export async function sendEmail(body: API.emailSendParams, options?: { [p: number]: any }) {
@@ -683,3 +731,5 @@ export async function editWebConfig(body: API.WebConfigParams, options?: { [p: n
     ...(options || {}),
   });
 }
+
+

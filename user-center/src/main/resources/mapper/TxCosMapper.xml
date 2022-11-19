@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon.usercenter.mapper.TxCosMapper">
+
+    <resultMap id="BaseResultMap" type="com.lemon.usercenter.model.domain.TxCos">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="tx_secret_id" column="tx_secret_id" jdbcType="VARCHAR"/>
+            <result property="tx_secret_key" column="tx_secret_key" jdbcType="VARCHAR"/>
+            <result property="tx_region" column="tx_region" jdbcType="VARCHAR"/>
+            <result property="tx_url" column="tx_url" jdbcType="VARCHAR"/>
+            <result property="tx_buket_name" column="tx_buket_name" jdbcType="VARCHAR"/>
+            <result property="userid" column="userid" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,tx_secret_id,tx_secret_key,
+        tx_region,tx_url,tx_buket_name,
+        userid
+    </sql>
+</mapper>

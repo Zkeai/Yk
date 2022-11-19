@@ -8,6 +8,7 @@ import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
 import com.qcloud.cos.auth.COSCredentials;
 
+import com.qcloud.cos.model.ObjectListing;
 import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
@@ -25,15 +26,14 @@ public class TXunCos {
      * 生成cos客户端
      * @return
      */
-    private static COSClient initCOSClient(){
+    private static COSClient initCOSClient(String TX_SECRET_ID, String TX_SECRET_KEY, String TX_REGION){
         COSCredentials cred = new BasicCOSCredentials(TX_SECRET_ID, TX_SECRET_KEY);
 
         Region region = new Region(TX_REGION);
         ClientConfig clientConfig = new ClientConfig(region);
 
         // 生成 cos 客户端。
-        COSClient cosClient = new COSClient(cred, clientConfig);
-        return cosClient;
+        return new COSClient(cred, clientConfig);
     }
 
 
@@ -41,6 +41,7 @@ public class TXunCos {
      * 上传文件
      */
     public static String UploadIMG(MultipartFile imgFile, String imgName,String path) {
+
         try {
             InputStream inputStream = imgFile.getInputStream();
             // 创建上传Object的Metadata
@@ -52,7 +53,7 @@ public class TXunCos {
             //生成一个随机的文件名
             String key = getFileKey(imgName,path);
             //上传到COS
-            PutObjectResult putResult = initCOSClient().putObject(TX_BUKET_NAME, key,inputStream, objectMetadata);
+            PutObjectResult putResult = initCOSClient(TX_SECRET_ID,TX_SECRET_KEY,TX_REGION).putObject(TX_BUKET_NAME, key,inputStream, objectMetadata);
             // 成功存储后，返回的地址
             return TX_URL+"/"+key;
         } catch (Exception e) {
@@ -61,10 +62,30 @@ public class TXunCos {
             return null;
         }
     }
+
+    /**
+     * 列出文件
+     */
+    public static ObjectListing FileList(String TX_SECRET_ID, String TX_SECRET_KEY, String TX_REGION,String buketName, String prefix){
+
+
+       return initCOSClient(TX_SECRET_ID,TX_SECRET_KEY,TX_REGION).listObjects(buketName,prefix);
+
+    }
+
+    /**
+     * 删除文件
+     */
+    public static boolean deleteFile(String TX_SECRET_ID, String TX_SECRET_KEY, String TX_REGION,String buketName, String key){
+
+        initCOSClient(TX_SECRET_ID,TX_SECRET_KEY,TX_REGION).deleteObject(buketName,key);
+        return true;
+    }
+
     /**
      * 生成文件路径
      *
-     * @return
+     * @return 文件路径
      */
     private static String getFileKey(String originalfileName, String path) {
         //对象储存对应的文件夹名

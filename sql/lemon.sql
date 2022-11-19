@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50738
 File Encoding         : 65001
 
-Date: 2022-11-17 20:41:08
+Date: 2022-11-19 17:12:51
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -190,7 +190,7 @@ CREATE TABLE `kew_group` (
 -- Records of kew_group
 -- ----------------------------
 INSERT INTO `kew_group` VALUES ('1', '词库1', 'lemon', '0', '词库', '2022-08-12 09:23:16', '2022-08-12 09:23:16', '0', '1');
-INSERT INTO `kew_group` VALUES ('2', '术语分组', 'lemon', '0', '术语分组', '2022-08-12 11:26:52', '2022-08-12 11:26:52', '0', '0');
+INSERT INTO `kew_group` VALUES ('2', '术语分组', 'lemon', '0', '术语分组', '2022-08-12 11:26:52', '2022-08-12 11:26:52', '1', '0');
 
 -- ----------------------------
 -- Table structure for keyword
@@ -317,6 +317,26 @@ CREATE TABLE `tasks` (
 -- ----------------------------
 INSERT INTO `tasks` VALUES ('7', '定时', '抖音组', 'DY养号', '352746023870084', null, '2022-11-11 13:06:54', '0', '2022-11-11 13:07:00', '1993738334', '0', '{\"type\":\"定时\",\"sendTime\":\"2022-11-11 13:07:00\",\"createTime\":\"2022-11-11 13:06:54\",\"scriptUrl\":\"https://lemon-1251938302.cos.ap-shanghai.myqcloud.com/script/%E6%8A%96%E9%9F%B3%E5%85%BB%E5%8F%B7.js\",\"D_DZ\":5,\"D_Gk\":20,\"D_PlDz\":10,\"D_PlLy\":5,\"Dz\":\"\",\"HpMax\":3,\"HpMin\":1,\"LlDx\":\"推荐\",\"LlFs\":\"随机滑屏\",\"LlMax\":200,\"LlMin\":100,\"LlScMax\":30,\"LlScMin\":15,\"PlDz\":\"\",\"PlGk\":\"\",\"PlLy\":\"\",\"QdDdMax\":3,\"QdDdMin\":1,\"QjYcMax\":3,\"QjYcMin\":1,\"SxMax\":5,\"SxMin\":2}');
 INSERT INTO `tasks` VALUES ('8', '定时', '抖音组', 'DY养号', '352746023870084', null, '2022-11-11 15:07:44', '0', '2022-11-11 15:08:07', '1993738334', '0', '{\"type\":\"定时\",\"sendTime\":\"2022-11-11 15:08:07\",\"createTime\":\"2022-11-11 15:07:44\",\"scriptUrl\":\"https://lemon-1251938302.cos.ap-shanghai.myqcloud.com/script/%E6%8A%96%E9%9F%B3%E5%85%BB%E5%8F%B7.js\",\"D_DZ\":5,\"D_Gk\":20,\"D_PlDz\":10,\"D_PlLy\":5,\"Dz\":\"\",\"HpMax\":3,\"HpMin\":1,\"LlDx\":\"推荐\",\"LlFs\":\"随机滑屏\",\"LlMax\":200,\"LlMin\":100,\"LlScMax\":30,\"LlScMin\":15,\"PlDz\":\"\",\"PlGk\":\"\",\"PlLy\":\"\",\"QdDdMax\":3,\"QdDdMin\":1,\"QjYcMax\":3,\"QjYcMin\":1,\"SxMax\":5,\"SxMin\":2}');
+
+-- ----------------------------
+-- Table structure for tx_cos
+-- ----------------------------
+DROP TABLE IF EXISTS `tx_cos`;
+CREATE TABLE `tx_cos` (
+  `id` int(1) NOT NULL AUTO_INCREMENT,
+  `tx_secret_id` varchar(256) CHARACTER SET utf8 DEFAULT NULL COMMENT '密钥id',
+  `tx_secret_key` varchar(256) CHARACTER SET utf8 DEFAULT NULL COMMENT '密钥',
+  `tx_region` varchar(256) CHARACTER SET utf8 DEFAULT NULL COMMENT '所属地域',
+  `tx_url` varchar(256) CHARACTER SET utf8 DEFAULT NULL COMMENT '地址',
+  `tx_buket_name` varchar(256) CHARACTER SET utf8 DEFAULT NULL COMMENT '储存桶名称',
+  `userid` varchar(256) DEFAULT NULL COMMENT '所属用户',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='腾讯云cos';
+
+-- ----------------------------
+-- Records of tx_cos
+-- ----------------------------
+INSERT INTO `tx_cos` VALUES ('1', 'AKIDmMfhTyB7mBKCrGNDm56qITO1NSGo55pI', 'D9nBI7fwwf7ICdnfIgpiKfkX3IFvKSJt', 'ap-shanghai', 'https://lemon-1251938302.cos.ap-shanghai.myqcloud.com', 'lemon-1251938302', 'lemon');
 
 -- ----------------------------
 -- Table structure for type
