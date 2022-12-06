@@ -15,6 +15,7 @@ import {decrypt} from "@/utils/aes";
 import moment from "moment";
 import XHScs from "@/pages/DeviceCenter/Script/XHS/components/XHSsx";
 import ZHyh from "@/pages/DeviceCenter/Script/ZH/components/ZHyh";
+import XHSFbWz from "@/pages/DeviceCenter/Script/XHS/components/XHSFbWz";
 
 const filtersArray: any =[{}];
 
@@ -241,7 +242,10 @@ export default () => {
           //todo  需要判断加载的组件
 
           scriptRw =="XHS私信"
-            ? <XHScs Ws={websocket}/> :<ZHyh Ws={websocket}/>
+            ? <XHScs Ws={websocket}/>
+            :scriptRw =="XHS发布文章"
+              ? <XHSFbWz Ws={websocket}/>
+              :<ZHyh Ws={websocket}/>
 
         }
 

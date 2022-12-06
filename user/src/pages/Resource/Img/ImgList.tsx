@@ -7,9 +7,9 @@ import message from "antd/es/message";
 
 import {useModel} from "@@/plugin-model/useModel";
 import {PlusCircleOutlined} from "@ant-design/icons";
-import {RcFile, UploadFile, UploadProps} from "antd/es/upload/interface";
+import type {RcFile, UploadFile, UploadProps} from "antd/es/upload/interface";
 import {Host, PROD_Host} from "@/contants";
-import {UploadChangeParam} from "antd/es/upload";
+import type {UploadChangeParam} from "antd/es/upload";
 
 
 const newArray: any[] = []
@@ -18,7 +18,6 @@ const newArray: any[] = []
 
 
 const App = () => {
-  console.log(process.env.NODE_ENV)
   const actionRef = useRef<ActionType>();
   const { initialState } = useModel('@@initialState');
   const columns: ProColumns<API.ImgReposed>[] = [
