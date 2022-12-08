@@ -34,9 +34,10 @@ public class FileController {
         String filePath=CurrentDirectory+"/file/"+date_+"/";
         //UUID.randomUUID()
         //文件重命名,防止重复
-        fileName=filePath+ date_+"-"+fileName;
+        String fileName_=filePath+ date_+"-"+fileName;
+        String RtFileName = "/file/"+date_+"/"+date_+"-"+fileName;
         //文件对象
-        File dest=new File(fileName);
+        File dest=new File(fileName_);
         //判断路径是否存在,如果不存在则创建
         if (!dest.getParentFile().exists()){
            Boolean a = dest.getParentFile().mkdirs();
@@ -45,7 +46,7 @@ public class FileController {
         try {
             //保存到服务器中
             file.transferTo(dest);
-            return ResultUtils.success(fileName);
+            return ResultUtils.success(RtFileName);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

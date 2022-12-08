@@ -66,7 +66,7 @@ const UpLoad: React.FC<Props> = (val: any) => {
 
           if (status === 'done') {
             const url = info.file.response.data
-            handleUploadImg(url)
+            handleUploadImg(PROD_Host+url)
             message.success(`${info.file.name} 文件上传成功.`);
           } else if (status === 'error') {
             message.error(`${info.file.name} 文件上传失败.`);
