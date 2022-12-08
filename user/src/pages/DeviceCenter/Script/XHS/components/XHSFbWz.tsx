@@ -8,14 +8,15 @@ import {
   ProFormTextArea, ProFormTreeSelect,
   StepsForm,
 } from '@ant-design/pro-components';
-import { message, Modal, Tag} from 'antd';
+import {Divider, message, Modal, Skeleton, Tag} from 'antd';
 import {addTask, getCosFileList, searchComments, searchDevicesList} from "@/services/ant-design-pro/api";
 import {useEffect, useRef, useState} from "react";
 import {useModel} from "@@/plugin-model/useModel";
 import "../../index.less"
 import moment from "moment";
 import {decrypt} from "@/utils/aes";
-
+import InfiniteScroll from 'react-infinite-scroll-component';
+import UpLoads from '@/pages/components/UpLoad'
 
 let phoneArray: any = []
 let newPhoneArray: any = []
@@ -53,6 +54,11 @@ const options=[
 
 
 export default (props: any) => {
+  const {saveImgUrl} =useModel("useXhsModel",(model: any)=> ({
+    saveImgUrl:model.saveImgUrl,
+
+  }))
+
   const formRef = useRef<ProFormInstance>();
   const {initialState} = useModel('@@initialState');
   const {setUseModalVisible, useScriptInfo} = useModel("useScriptModel", (model: any) => ({
@@ -62,6 +68,7 @@ export default (props: any) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [timeVisible, setTimeVisible] = useState({display: "none"});
   const [imgVisible, setImgVisible] = useState({display: "none"});
+  const [uploadVisible, setUploadVisible] = useState({display: "inline-block"});
   const [task, setTask] = useState(
     {
       ZxMs: "",
@@ -115,9 +122,9 @@ export default (props: any) => {
   }
   useEffect(() => {
     ws = props.Ws
+    saveImgUrl(formRef)
 
-    getImg().then()
-  }, [getImg, props.Ws])
+  }, [props.Ws, saveImgUrl])
 
 
 
@@ -129,6 +136,30 @@ export default (props: any) => {
       commentArea: val,
     });
   }
+    //图库图片点击
+  const handleCheckedImg = (isChecked: boolean,val: string) => {
+    if(isChecked){
+
+      const last_url = formRef?.current?.getFieldsValue().img_urls
+      if(last_url === undefined || last_url === ""){
+        formRef?.current?.setFieldsValue({
+          img_urls: val,
+        });
+      }else{
+        formRef?.current?.setFieldsValue({
+          img_urls: last_url+'\n'+val,
+        });
+      }
+
+    }else{
+      //todo 取消选中 理应 删除这条链接
+      return
+
+    }
+
+  }
+
+
 
   const handleOk = () => {
     setIsModalVisible(false);
@@ -138,17 +169,19 @@ export default (props: any) => {
     setIsModalVisible(false);
   };
 
-
-  const Icons: any = ({count,img_list}: {count: number,img_list: any[]}) => {
+//自定义组件  图片列表
+  const ImgList: any = ({count,img_list}: {count: number,img_list: any[]}) => {
     return(
       Array.from({length: count}).map((_item, index) =>
         <CheckCard
-          style={{ width: 150 }}
+          style={{ width: 165 }}
           value={index}
-          key={img_list[index]?.key}
+          key={img_list[index]?.imgUrl}
+          onChange={(checked)=>{handleCheckedImg(checked,img_list[index]?.imgUrl)}}
           cover={
             <img
               alt="loading"
+              style={{height:90}}
               src={img_list[index]?.imgUrl}
             />
           }
@@ -158,7 +191,9 @@ export default (props: any) => {
 
 }
 
-
+  const loadMoreData = ()=>{
+      return
+  }
 
 
 
@@ -305,7 +340,6 @@ export default (props: any) => {
             {/*话术分组*/}
             <ProForm.Group>
               <ProFormSelect
-
                 options={options}
                 initialValue=""
                 width="sm"
@@ -345,8 +379,9 @@ export default (props: any) => {
             {/*标签*/}
             <ProForm.Group>
               <ProFormTextArea
-                width="xl" name="T_Label" label="文章标签(一行一个)"/>
+                width="xl" name="T_Label" label="文章标签(一行一个 不要添加#)"/>
             </ProForm.Group>
+            {/*图片选择方式*/}
             <ProForm.Group >
             <ProFormRadio.Group
               label="上传图片类型"
@@ -358,8 +393,13 @@ export default (props: any) => {
                   onChange: (value) => {
                     if (value.target.value === "手动") {
                       setImgVisible({display: "none"})
+                      setUploadVisible({display: "inline-block"})
                     } else {
-                      setImgVisible({display: "inline"})
+                      getImg().then(()=>{
+                        setImgVisible({display: "inline"})
+                        setUploadVisible({display: "none"})
+                      })
+
                     }
 
                   }
@@ -367,13 +407,41 @@ export default (props: any) => {
               }
             />
             </ProForm.Group>
-
-            {/*图库图片列表*/}
-            <ProForm.Group style={imgVisible} >
-              <CheckCard.Group  style={{ width: 550 }} size="small" multiple={true}>
-                <Icons count={2}  img_list={newArray}/>
-              </CheckCard.Group>
+            {/*手动 图片列表*/}
+            <UpLoads {...uploadVisible} />
+            {/*图库 图片列表*/}
+            <ProForm.Group style={imgVisible}  >
+              <div
+                id="scrollableDiv"
+                style={{
+                  height: 200,
+                  overflow: 'auto',
+                  padding: '10px 10px',
+                  border: '1px solid rgba(140, 140, 140, 0.35)',
+                }}
+              >
+                <InfiniteScroll
+                  dataLength={10}
+                  next={loadMoreData}
+                  hasMore={false}
+                  loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+                  endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+                  scrollableTarget="scrollableDiv"
+                >
+                <CheckCard.Group  style={{ width: 550 }} size="small" multiple={true}>
+                  <ImgList count={newArray.length}  img_list={newArray}/>
+                </CheckCard.Group>
+                </InfiniteScroll>
+              </div>
             </ProForm.Group>
+
+            {/*图片链接*/}
+            <ProForm.Group>
+              <ProFormTextArea
+                width={900}  name="img_urls" label="图片链接"/>
+            </ProForm.Group>
+
+
 
             {/*文章内容*/}
             <ProForm.Group>

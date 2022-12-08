@@ -9,7 +9,6 @@ export default function useResourceModel() {
     setKeyGroupList(temp)
   },[])
 
-
   return {
 
     keyGroupList,

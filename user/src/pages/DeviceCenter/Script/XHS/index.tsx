@@ -240,7 +240,6 @@ export default () => {
 
         {
           //todo  需要判断加载的组件
-
           scriptRw =="XHS私信"
             ? <XHScs Ws={websocket}/>
             :scriptRw =="XHS发布文章"
