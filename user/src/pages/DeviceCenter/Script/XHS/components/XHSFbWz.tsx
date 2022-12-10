@@ -218,8 +218,11 @@ export default (props: any) => {
               type: "排队",
               createTime: createTime,
               scriptUrl: useScriptInfo.scriptUrl,
-              T_ID: values?.T_ID,
+              T_Title: values?.T_Title,
               commentArea:values?.commentArea,
+              img_urls: values?.img_urls,
+              T_Label: values?.T_Label
+
             })
           }
           if (ZxMs === "定时") {
@@ -228,8 +231,10 @@ export default (props: any) => {
               sendTime: sendTime,
               createTime: createTime,
               scriptUrl: useScriptInfo.scriptUrl,
-              T_ID: values?.T_ID,
+              T_Title: values?.T_Title,
               commentArea:values?.commentArea,
+              img_urls: values?.img_urls,
+              T_Label: values?.T_Label
             })
           }
 
@@ -266,8 +271,10 @@ export default (props: any) => {
                   type: "排队",
                   createTime: createTime,
                   scriptUrl: useScriptInfo.scriptUrl,
-                  T_ID: values?.T_ID,
+                  T_Title: values?.T_Title,
                   commentArea:values?.commentArea,
+                  img_urls: values?.img_urls,
+                  T_Label: values?.T_Label
                 },
                 array: devices.split(",")
               })
@@ -284,8 +291,10 @@ export default (props: any) => {
                   createTime: createTime,
                   sendTime: sendTime,
                   scriptUrl: useScriptInfo.scriptUrl,
-                  T_ID: values?.T_ID,
+                  T_Title: values?.T_Title,
                   commentArea:values?.commentArea,
+                  img_urls: values?.img_urls,
+                  T_Label: values?.T_Label
                 },
                 array: devices.split(",")
               })
@@ -441,14 +450,6 @@ export default (props: any) => {
                 width={900}  name="img_urls" label="图片链接"/>
             </ProForm.Group>
 
-
-
-            {/*文章内容*/}
-            <ProForm.Group>
-              <ProFormTextArea
-                rules={[{ required: true, message: '这是必填项' }]}
-                width="xl" name="commentArea" label="文章内容"/>
-            </ProForm.Group>
 
 
 

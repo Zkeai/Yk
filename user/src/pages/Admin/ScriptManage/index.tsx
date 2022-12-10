@@ -155,7 +155,7 @@ const columns: ProColumns<API.ScriptsItem>[] = [
       >
         编辑
       </a>,
-      <a href={record?.url} target="_blank" rel="noopener noreferrer" key="view">
+      <a href={record?.courseUrl} target="_blank" rel="noopener noreferrer" key="view">
         查看
       </a>,
     ],

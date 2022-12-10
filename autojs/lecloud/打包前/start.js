@@ -848,6 +848,23 @@ function 运行脚本(msg,filename){
                     commentArea:msg.commentArea,
             })
             break;
+			
+			
+			case "小红书发布文章.js":
+                function exec_zhcs(action, args){
+                    args = args || {};
+                    console.log("运行脚本:"+filename)
+                     engineScript = engines.execScript(action.name, action.name + "(" + JSON.stringify(args) + ");\n" + action.toString());
+                     files.remove("/sdcard/Le/main/"+filename)
+                   }
+                   exec_zhcs(script.main, {
+                    createTime:msg.createTime,
+                    T_Title:msg.T_Title,
+                    commentArea:msg.commentArea,
+					img_urls: msg.img_urls,
+					T_Label: msg.T_Label
+            })
+            break;
         }
         
 
