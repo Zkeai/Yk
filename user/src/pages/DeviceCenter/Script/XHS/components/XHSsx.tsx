@@ -3,39 +3,25 @@ import {
   ProForm,
   ProFormDateTimePicker,
   ProFormDigit, ProFormInstance, ProFormRadio, ProFormSelect, ProFormText,
-  ProFormTextArea, ProFormTreeSelect,
+  ProFormTextArea,
   StepsForm,
 } from '@ant-design/pro-components';
-import {message, Modal,  Tag} from 'antd';
-import {addTask, searchComments, searchDevicesList} from "@/services/ant-design-pro/api";
+import {message, Modal} from 'antd';
+import {addTask, searchComments} from "@/services/ant-design-pro/api";
 import {useEffect, useRef, useState} from "react";
 import {useModel} from "@@/plugin-model/useModel";
 import "../../index.less"
 import moment from "moment";
 import {decrypt} from "@/utils/aes";
+import PhoneList from "@/pages/DeviceCenter/Script/components/PhoneList";
 
 
-let phoneArray: any = []
-let newPhoneArray: any = []
+const phoneArray: any = []
+const newPhoneArray: any = []
 const newArray: any = []
 let ws: any;
 
 
-const phoneList = [
-  {
-    title: 'Node1',
-    value: '0-0',
-    selectable: false,
-    children: [
-      {
-        title: 'Child Node1',
-        value: '0-0-0',
-        treeIcon: true,
-
-      },
-    ],
-  },
-]
 const options=[
   {
     value: '6',
@@ -114,6 +100,8 @@ export default (props: any) => {
               scriptUrl: useScriptInfo.scriptUrl,
               T_ID: values?.T_ID,
               commentArea:values?.commentArea,
+              YcMin:values?.YcMin,
+              YcMax:values?.YcMax
             })
           }
           if (ZxMs === "定时") {
@@ -124,6 +112,8 @@ export default (props: any) => {
               scriptUrl: useScriptInfo.scriptUrl,
               T_ID: values?.T_ID,
               commentArea:values?.commentArea,
+              YcMin:values?.YcMin,
+              YcMax:values?.YcMax
             })
           }
 
@@ -162,6 +152,8 @@ export default (props: any) => {
                   scriptUrl: useScriptInfo.scriptUrl,
                   T_ID: values?.T_ID,
                   commentArea:values?.commentArea,
+                  YcMin:values?.YcMin,
+                  YcMax:values?.YcMax
                 },
                 array: devices.split(",")
               })
@@ -180,6 +172,8 @@ export default (props: any) => {
                   scriptUrl: useScriptInfo.scriptUrl,
                   T_ID: values?.T_ID,
                   commentArea:values?.commentArea,
+                  YcMin:values?.YcMin,
+                  YcMax:values?.YcMax
                 },
                 array: devices.split(",")
               })
@@ -226,18 +220,17 @@ export default (props: any) => {
 
 
             {/*浏览ID*/}
-            <ProForm.Group>
-              <ProFormTextArea tooltip="用户ID" width="xl" name="T_ID" label="用户ID(一行一条)"/>
+            <ProForm.Group title={"用户ID(一行一条)"}>
+              <ProFormTextArea  width="xl" name="T_ID" />
             </ProForm.Group>
             {/*话术分组*/}
-            <ProForm.Group>
+            <ProForm.Group title={"私信分组选择"}>
               <ProFormSelect
 
                 options={options}
                 initialValue=""
                 width="sm"
                 name="comGroupSelect"
-                label="私信分组选择"
                 fieldProps={{
                   onSelect:(val: any) => handleSelect(val),
                 }}
@@ -264,8 +257,16 @@ export default (props: any) => {
 
             </ProForm.Group>
             {/*话术内容*/}
-            <ProForm.Group>
-              <ProFormTextArea tooltip="私信内容" width="xl" name="commentArea" label="私信内容(一行一条)"/>
+            <ProForm.Group title={"私信内容(一行一条)"}>
+              <ProFormTextArea tooltip="私信内容" width="xl" name="commentArea" />
+            </ProForm.Group>
+            {/*随机延迟*/}
+            <ProForm.Group title="随机延迟(单位/秒)">
+              <ProFormDigit rules={[{required: true, message: ''}]} name="YcMin" width="xs" min={60} max={3600}
+                            initialValue={60}/>-
+              <ProFormDigit rules={[{required: true, message: ''}]} name="YcMax" width="xs" min={60} max={3600}
+                            initialValue={300}/>
+
             </ProForm.Group>
           </ProCard>
 
@@ -281,86 +282,7 @@ export default (props: any) => {
           >
 
             <ProForm.Group title="选择设备"/>
-            <ProFormTreeSelect
-              rules={[{required: true, message: '必选'}]}
-              name="selectPhone"
-              placeholder="请选择设备"
-              allowClear
-              width={800}
-              secondary
-              request={async () => {
-                const {data} = await searchDevicesList()
-                phoneArray.length = 0
-                newArray.length = 0
-                const res = decrypt(data).split(";")
-                if (res[0] !== "") {
-                  for (let i = 0; i < res.length; i++) {
-                    const m = JSON.parse(res[i])
-                    if (m.deviceGroup === "" || m.deviceGroup === null || m.deviceGroup === undefined) {
-                      m.deviceGroup = "默认分组"
-                    }
-
-                    phoneArray.push(m.deviceGroup)
-                    newArray.push({
-                      index: i + 1,
-                      id: m.id,
-                      remark: m.remark,
-                      deviceName: m.deviceName,
-                      deviceModel: m.deviceModel,
-                      deviceGroup: m.deviceGroup,
-                      status: m.status,
-                      createTime: moment(m.createTime).format("YYYY-MM-DD HH:mm:ss"),
-                    })
-                  }
-                }
-                phoneArray = phoneArray.sort()
-                newPhoneArray = [...new Set(phoneArray)]
-                phoneList.length = 0
-                newPhoneArray.forEach((groupName: string) => {
-                  const array: any = []
-                  newArray.map((m: any) => {
-                    const title = m.remark
-                    const value_ = m.deviceModel
-                    if (m.deviceGroup === groupName) {
-                      array.push(
-                        {
-                          title:
-                            <Tag color={m.status === 0 ? "#009688" : "red"}>
-                              {m.status === 0 ? "[在线]" + title : "[离线]" + title}
-                            </Tag>,
-                          value: value_,
-
-                        }
-                      )
-
-                    }
-                  })
-                  phoneList.push({
-                    selectable: false,
-                    title: groupName,
-                    value: groupName,
-                    children: array
-                  })
-                })
-
-                return phoneList
-              }}
-              // tree-select args
-              fieldProps={{
-
-                showArrow: false,
-                filterTreeNode: true,
-                showSearch: true,
-                dropdownMatchSelectWidth: false,
-                labelInValue: false,
-                autoClearSearchValue: true,
-                multiple: true,
-                treeNodeFilterProp: 'title',
-                fieldNames: {
-                  label: 'title',
-                },
-              }}
-            />
+            <PhoneList phoneArray={phoneArray} newPhoneArray={newPhoneArray} newArray={newArray} />
 
           </ProCard>
         </StepsForm.StepForm>

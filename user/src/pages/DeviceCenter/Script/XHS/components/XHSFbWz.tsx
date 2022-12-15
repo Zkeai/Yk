@@ -5,11 +5,12 @@ import {
   ProForm,
   ProFormDateTimePicker,
   ProFormDigit, ProFormRadio, ProFormSelect, ProFormText,
-  ProFormTextArea, ProFormTreeSelect,
+  ProFormTextArea,
   StepsForm,
 } from '@ant-design/pro-components';
-import {Divider, message, Modal, Skeleton, Tag} from 'antd';
-import {addTask, getCosFileList, searchComments, searchDevicesList} from "@/services/ant-design-pro/api";
+import {Divider, message, Modal, Skeleton} from 'antd';
+import {addTask, getCosFileList, searchComments} from "@/services/ant-design-pro/api";
+
 import {useEffect, useRef, useState} from "react";
 import {useModel} from "@@/plugin-model/useModel";
 import "../../index.less"
@@ -17,28 +18,15 @@ import moment from "moment";
 import {decrypt} from "@/utils/aes";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import UpLoads from '@/pages/components/UpLoad'
+import PhoneList from '@/pages/DeviceCenter/Script/components/PhoneList'
 
-let phoneArray: any = []
-let newPhoneArray: any = []
+const phoneArray: any = []
+const newPhoneArray: any = []
 const newArray: any = []
 let ws: any;
 
 
-const phoneList = [
-  {
-    title: 'Node1',
-    value: '0-0',
-    selectable: false,
-    children: [
-      {
-        title: 'Child Node1',
-        value: '0-0-0',
-        treeIcon: true,
 
-      },
-    ],
-  },
-]
 const options=[
   {
     value: '6',
@@ -341,19 +329,19 @@ export default (props: any) => {
 
 
             {/*文章标题*/}
-            <ProForm.Group>
+            <ProForm.Group title="文章标题">
               <ProFormText
                 rules={[{ required: true, message: '这是必填项' }]}
-                width="xl" name="T_Title" label="文章标题"/>
+                width="xl" name="T_Title" />
             </ProForm.Group>
             {/*话术分组*/}
-            <ProForm.Group>
+            <ProForm.Group title="文章内容分组">
               <ProFormSelect
                 options={options}
                 initialValue=""
                 width="sm"
                 name="comGroupSelect"
-                label="文章内容分组"
+
                 fieldProps={{
                   onSelect:(val: any) => handleSelect(val),
                 }}
@@ -380,20 +368,19 @@ export default (props: any) => {
 
             </ProForm.Group>
             {/*文章内容*/}
-            <ProForm.Group>
+            <ProForm.Group title="文章内容">
               <ProFormTextArea
                 rules={[{ required: true, message: '这是必填项' }]}
-                 width="xl" name="commentArea" label="文章内容"/>
+                 width="xl" name="commentArea" />
             </ProForm.Group>
             {/*标签*/}
-            <ProForm.Group>
+            <ProForm.Group title="文章标签(一行一个 不要添加#)">
               <ProFormTextArea
-                width="xl" name="T_Label" label="文章标签(一行一个 不要添加#)"/>
+                width="xl" name="T_Label" />
             </ProForm.Group>
             {/*图片选择方式*/}
-            <ProForm.Group >
+            <ProForm.Group title="上传图片类型">
             <ProFormRadio.Group
-              label="上传图片类型"
               name="imgType"
               initialValue="手动"
               options={[{label:"手动",value:'手动'}, {label:"图库",value:'图库'}]}
@@ -445,16 +432,10 @@ export default (props: any) => {
             </ProForm.Group>
 
             {/*图片链接*/}
-            <ProForm.Group>
+            <ProForm.Group  title="图片链接">
               <ProFormTextArea
-                width={900}  name="img_urls" label="图片链接"/>
+                width={900}  name="img_urls"/>
             </ProForm.Group>
-
-
-
-
-
-
 
           </ProCard>
 
@@ -470,87 +451,7 @@ export default (props: any) => {
           >
 
             <ProForm.Group title="选择设备"/>
-            <ProFormTreeSelect
-              rules={[{required: true, message: '必选'}]}
-              name="selectPhone"
-              placeholder="请选择设备"
-              allowClear
-              width={800}
-              secondary
-              request={async () => {
-                const {data} = await searchDevicesList()
-                phoneArray.length = 0
-                newArray.length = 0
-                const res = decrypt(data).split(";")
-                if (res[0] !== "") {
-                  for (let i = 0; i < res.length; i++) {
-                    const m = JSON.parse(res[i])
-                    if (m.deviceGroup === "" || m.deviceGroup === null || m.deviceGroup === undefined) {
-                      m.deviceGroup = "默认分组"
-                    }
-
-                    phoneArray.push(m.deviceGroup)
-                    newArray.push({
-                      index: i + 1,
-                      id: m.id,
-                      remark: m.remark,
-                      deviceName: m.deviceName,
-                      deviceModel: m.deviceModel,
-                      deviceGroup: m.deviceGroup,
-                      status: m.status,
-                      createTime: moment(m.createTime).format("YYYY-MM-DD HH:mm:ss"),
-                    })
-                  }
-                }
-                phoneArray = phoneArray.sort()
-                newPhoneArray = [...new Set(phoneArray)]
-                phoneList.length = 0
-                newPhoneArray.forEach((groupName: string) => {
-                  const array: any = []
-                  newArray.map((m: any) => {
-                    const title = m.remark
-                    const value_ = m.deviceModel
-                    if (m.deviceGroup === groupName) {
-                      array.push(
-                        {
-                          title:
-                            <Tag color={m.status === 0 ? "#009688" : "red"}>
-                              {m.status === 0 ? "[在线]" + title : "[离线]" + title}
-                            </Tag>,
-                          value: value_,
-
-                        }
-                      )
-
-                    }
-                  })
-                  phoneList.push({
-                    selectable: false,
-                    title: groupName,
-                    value: groupName,
-                    children: array
-                  })
-                })
-
-                return phoneList
-              }}
-              // tree-select args
-              fieldProps={{
-
-                showArrow: false,
-                filterTreeNode: true,
-                showSearch: true,
-                dropdownMatchSelectWidth: false,
-                labelInValue: false,
-                autoClearSearchValue: true,
-                multiple: true,
-                treeNodeFilterProp: 'title',
-                fieldNames: {
-                  label: 'title',
-                },
-              }}
-            />
-
+              <PhoneList phoneArray={phoneArray} newPhoneArray={newPhoneArray} newArray={newArray} />
           </ProCard>
         </StepsForm.StepForm>
 

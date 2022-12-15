@@ -80,7 +80,7 @@ public class DevicesController {
             throw new BusinessException(ErrorCode.NO_LOGIN);
         }
         QueryWrapper<Devices> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("userid",user.getUserAccount());
+        queryWrapper.eq("userid",user.getUserAccount()).eq("status",0);
 
         List<Devices> DevicesList = devicesService.list(queryWrapper);
         for (Devices devices : DevicesList) {

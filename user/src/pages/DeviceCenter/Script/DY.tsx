@@ -9,9 +9,9 @@ import {useEffect, useRef, useState} from 'react';
 
 import { searchScript} from "@/services/ant-design-pro/api";
 import {PlusOutlined} from "@ant-design/icons";
-import DYYh from "@/pages/DeviceCenter/Script/components/DYYh";
-import DYUidGz from "@/pages/DeviceCenter/Script/components/DYUidGz";
-import DYLh from "@/pages/DeviceCenter/Script/components/DYLh";
+import DYYh from "@/pages/DeviceCenter/Script/DY/components/DYYh";
+import DYUidGz from "@/pages/DeviceCenter/Script/DY/components/DYUidGz";
+import DYLh from "@/pages/DeviceCenter/Script/DY/components/DYLh";
 import { useModel } from 'umi';
 import {ws} from '@/utils/WebSocket'
 import {decrypt} from "@/utils/aes";

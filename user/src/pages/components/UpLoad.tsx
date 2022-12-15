@@ -13,15 +13,15 @@ type Props = Record<string, any>;
 
 
 const beforeUpload = (file: RcFile) => {
-
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+  console.log(file.type)
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'video/mp4';
   if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
+    message.error('You can only upload JPG/PNG/MP4 file!');
 
   }
-  const isLt5M = file.size / 1024 / 1024 < 5;
+  const isLt5M = file.size / 1024 / 1024 < 20;
   if (!isLt5M) {
-    message.error('Image must smaller than 5MB!');
+    message.error('Image must smaller than 20MB!');
 
   }
   return isJpgOrPng && isLt5M;

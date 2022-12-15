@@ -13,6 +13,9 @@ var 小红书私信 ={}
     try {
 
         var 用户ID = args.ID.split("\n")
+		var 最小随机 = args.YcMin
+		var 最大随机 = args.YcMax
+		
         for(let i = 0 ; i < 用户ID.length;i++){
             toastLog("当前用户ID："+用户ID[i])
             //1.跳转用户页面
@@ -41,9 +44,13 @@ var 小红书私信 ={}
                 back()
                 sleep(1000)
                 back()
+				sleep(1000)
+				back()
 
             
-
+			let 等待时间 = random(最小随机,最大随机)
+            toastLog("等待时间:"+等待时间+"秒")
+			sleep(等待时间*1000)
 
         }
         

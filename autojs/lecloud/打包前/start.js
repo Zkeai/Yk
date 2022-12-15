@@ -463,7 +463,7 @@ function 主脚本(uuid,secret,software){
                 eventThread: 'this'
                 });
                 ws.on("open", (res, ws) => {
-                    toastLog("device online");
+                    toastLog("设备成功上线");
                     setTimeout(()=>{
                         var msg = JSON.stringify({
                             type: "online",
@@ -641,7 +641,9 @@ threads.start(function(){
             <img id="icon"  src="https://lemon-1251938302.cos.ap-shanghai.myqcloud.com/userCenterAvatar/3.png" w="30" h="30" alpha="0.8"  radius="15px"/>
             <button  id="action"  marginTop="5" text="启动" w="50" h="30" textSize="12" padding="-2 0 0 0" bg="#525252" color="#29f529"  alpha="0.7"  />
             <button  id="日志"  marginTop="5" text="日志" w="50" h="30" textSize="12" padding="-2 0 0 0" bg="#525252" color="#06cad3"  alpha="0.7"  />
+			<button  id="结束"  marginTop="5" text="结束" w="50" h="30" textSize="12" padding="-2 0 0 0" bg="#525252" color="#f5f529"  alpha="0.7"  />
             <button  id="设置"  marginTop="5" text="设置" w="50" h="30" textSize="12" padding="-2 0 0 0" bg="#525252" color="#f5f529"  alpha="0.7"  />
+
             </vertical>
         </frame>
     );
@@ -711,6 +713,11 @@ threads.start(function(){
 
         app.startActivity("settings");
     })
+	    window.结束.on("click",function(){
+
+        engines.stopAllAndToast()
+    })
+	
     window.action.on("click",function(){
         if(ui.保存.visibility ===  8){
             onClick()
@@ -846,6 +853,8 @@ function 运行脚本(msg,filename){
                     createTime:msg.createTime,
                     ID:msg.T_ID,
                     commentArea:msg.commentArea,
+					YcMin: msg.YcMin,
+					YcMax: msg.YcMax
             })
             break;
 			
