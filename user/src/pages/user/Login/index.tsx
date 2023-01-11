@@ -146,7 +146,7 @@ const Login: React.FC = () => {
       <div className={styles.content}>
         <LoginForm
           logo={<img alt="logo" src={SYSTEM_LOGO}/>}
-          title="乐云星球"
+          title="知友云控"
           subTitle={'【LeCloud】 一体化云控系统'}
           initialValues={{
             autoLogin: true,
