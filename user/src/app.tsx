@@ -27,9 +27,6 @@ export const request: RequestConfig = {
 };
 
 
-/**
- * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
- * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
@@ -72,21 +69,7 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
-
-
-  // const fetchEmailConfig = async () => {
-  //   try {
-  //     const result = await searchEmail();
-  //     return JSON.parse(decrypt(result.data));
-  //   } catch (error) {
-  //     history.push(loginPath);
-  //   }
-  //   return undefined;
-  // };
-
   const currentUser = await fetchUserInfo();
-
-  //const emailConfig = await fetchEmailConfig();
   const webConfig = await fetchWebConfig();
   const cosConfig = await fetchCosConfig();
 
@@ -118,8 +101,6 @@ export async function getInitialState(): Promise<{
 
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
-
-// 南极客 修补：二级图标正常显示2021.7.8
 
     menuItemRender: (menuItemProps, defaultDom) => {
 
